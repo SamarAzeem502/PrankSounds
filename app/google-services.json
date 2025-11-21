@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "964984101784",
+    "project_id": "algo-soft",
+    "storage_bucket": "algo-soft.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964984101784:android:89ab15f0317134cf72a9ed",
+        "android_client_info": {
+          "package_name": "algo.smart.status.saver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964984101784-i6k9sqb6pu9m15c9ivc9pe3gdgh14bcq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuWS4FG4ERHCGsxP3o1f7zW4wLHwpG39I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964984101784-i6k9sqb6pu9m15c9ivc9pe3gdgh14bcq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964984101784:android:b35ea7e8c72bfec272a9ed",
+        "android_client_info": {
+          "package_name": "com.fun.hairclipper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964984101784-i6k9sqb6pu9m15c9ivc9pe3gdgh14bcq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuWS4FG4ERHCGsxP3o1f7zW4wLHwpG39I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964984101784-i6k9sqb6pu9m15c9ivc9pe3gdgh14bcq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

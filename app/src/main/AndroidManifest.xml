@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name=".admobHelper.MyApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@drawable/icon"
+        android:screenOrientation="locked"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HairClipper">
+        <activity
+            android:name=".UI.PremiumScreen"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.ThemeSelectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.LanguageSelection"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.NewMainMenu"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.ChangeTrimmerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.StunGunActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.AirHornActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.HalloweenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.FartActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine13"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine12"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine11"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine10"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine9"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine8"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine7"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine6"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine5"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine4"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine3"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine2"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.machine1"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+        <activity
+            android:name=".UI.SplashScreen"
+            android:exported="true"
+            android:theme="@style/Theme.HairClipper.NoAction">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.fun.hairclipper.UI.IntroActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HairClipper.NoAction" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/AppId" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
+
+    </application>
+
+</manifest>

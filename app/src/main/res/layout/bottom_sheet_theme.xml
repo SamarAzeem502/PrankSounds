@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="12dp"
+            android:text="@string/app_theme"
+            android:textColor="@color/textColor"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnChangeTheme">
+
+            <RadioButton
+                android:id="@+id/radioButtonSystem"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_card"
+                android:buttonTint="@color/red"
+                android:padding="12dp"
+                android:text="@string/system_default"
+                android:textColor="@color/textColor" />
+
+            <RadioButton
+                android:id="@+id/radioButtonLight"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginVertical="12dp"
+                android:background="@drawable/bg_card"
+                android:buttonTint="@color/red"
+                android:padding="12dp"
+                android:text="@string/light_theme"
+                android:textColor="@color/textColor" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDark"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_card"
+                android:buttonTint="@color/red"
+                android:padding="12dp"
+                android:text="@string/dark_theme"
+                android:textColor="@color/textColor" />
+
+        </RadioGroup>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="6dp">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#6DB6B3B3"
+                android:outlineProvider="none"
+                android:singleLine="true"
+                android:text="@string/cancel"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btnChangeTheme"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_red"
+                android:backgroundTint="@color/red"
+                android:singleLine="true"
+                android:text="@string/apply"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

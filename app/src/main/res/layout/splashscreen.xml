@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    android:fitsSystemWindows="true"
+    tools:context=".UI.SplashScreen">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_color">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/simulated_hair_clipper"
+            android:textColor="@color/red"
+            android:textSize="@dimen/_30sdp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/img"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/pbSplash"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/trimmer"
+            app:lottie_speed="1"
+            tools:ignore="ContentDescription" />
+
+        <ProgressBar
+            android:id="@+id/pbSplash"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_8sdp"
+            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
+            android:indeterminate="false"
+            android:progress="0"
+            android:progressBackgroundTint="#866A6969"
+            android:progressDrawable="@drawable/progress_bg"
+            android:progressTint="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/buttonStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img" />
+
+        <TextView
+            android:id="@+id/loadingSounds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/loading_sounds"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toTopOf="@+id/buttonStart"
+            app:layout_constraintTop_toBottomOf="@id/pbSplash" />
+
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_card"
+            android:backgroundTint="@color/red"
+            android:drawableEnd="@drawable/ic_start"
+            android:fontFamily="@font/alegreya_italic"
+            android:text="@string/start"
+            android:paddingHorizontal="12dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/buttonPro"
+            app:layout_constraintEnd_toEndOf="@+id/buttonPro"
+            app:layout_constraintStart_toStartOf="@+id/buttonPro"
+            app:layout_constraintTop_toBottomOf="@id/pbSplash" />
+
+        <Button
+            android:id="@+id/buttonPro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/red"
+            android:background="@drawable/bg_card"
+            android:drawableEnd="@drawable/ic_start"
+            android:fontFamily="@font/alegreya_italic"
+            android:text="@string/continue_with_pro"
+            android:textColor="@color/white"
+            android:paddingHorizontal="12dp"
+            android:textSize="@dimen/_18sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

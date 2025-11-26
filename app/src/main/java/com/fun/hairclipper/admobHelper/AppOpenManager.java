@@ -13,7 +13,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.fun.hairclipper.R;
 import com.fun.hairclipper.UI.SplashScreen;
-import com.fun.hairclipper.tools.PaymentSubscription;
+import com.fun.hairclipper.helpers.PaymentSubscription;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;

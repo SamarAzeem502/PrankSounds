@@ -4,20 +4,28 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.DisplayMetrics
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.admobHelper.MyApplication
 import com.`fun`.hairclipper.databinding.RateUsDialogBinding
-import com.`fun`.hairclipper.tools.LocaleNow
+import com.`fun`.hairclipper.helpers.LocaleNow
 import com.google.android.gms.ads.AdSize
 
 open class BaseClass : AppCompatActivity() {
@@ -27,11 +35,42 @@ open class BaseClass : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStatusBarGradiant(this)
+        updateAppConfiguration()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleBackPressed()
             }
         })
+    }
+    private fun setStatusBarGradiant(activity: Activity) {
+        val window: Window = activity.window
+        val background = ContextCompat.getDrawable(activity, R.drawable.bg_status_bar)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(activity, android.R.color.transparent)
+//        window.navigationBarColor = ContextCompat.getColor(activity, android.R.color.transparent)
+        window.setBackgroundDrawable(background)
+    }
+
+    private fun updateAppConfiguration() {
+        // Disable font scaling
+        val fontScale = getResources().configuration.fontScale
+        if (fontScale != 1.0f) {
+            val configuration = Configuration(getResources().configuration)
+            configuration.fontScale = 1.0f
+            getResources().updateConfiguration(configuration, getResources().displayMetrics)
+        }
+
+        // Disable layout scaling
+        val density = getResources().displayMetrics.density
+        val scaledDensity = getResources().displayMetrics.scaledDensity
+        if (density != scaledDensity) {
+            getResources().displayMetrics.scaledDensity = density
+            getResources().updateConfiguration(
+                getResources().configuration,
+                getResources().displayMetrics
+            )
+        }
     }
 
     open fun handleBackPressed() {

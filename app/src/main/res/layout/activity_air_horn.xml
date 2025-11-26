@@ -21,6 +21,7 @@
             android:layout_height="match_parent">
 
             <TextView
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/red"
@@ -28,7 +29,7 @@
                 android:gravity="center"
                 android:shadowColor="@android:color/black"
                 android:singleLine="true"
-                android:text="@string/fart_sound_prank"
+                android:text="@string/vehicle_sound_prank"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_24ssp"
                 app:layout_constraintEnd_toEndOf="parent"

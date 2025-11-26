@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.bumptech.glide.Glide
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.databinding.ActivityThemeSelectionBinding
-import com.`fun`.hairclipper.tools.AppPrefs
+import com.`fun`.hairclipper.helpers.AppPrefs
 
 class ThemeSelectionActivity : BaseClass() {
     private lateinit var binding: ActivityThemeSelectionBinding
@@ -34,7 +34,7 @@ class ThemeSelectionActivity : BaseClass() {
         }
         Glide.with(this).load(lightThemeImgResId).into(binding.appCompatImageView)
         Glide.with(this).load(darkThemeImgResId).into(binding.appCompatImageView2)
-        binding.homeBtn.setOnClickListener { onBackPressed() }
+        binding.homeBtn.setOnClickListener { handleBackPressed() }
         binding.appCompatImageView.setOnClickListener {
             setThemeAndImages(
                 AppCompatDelegate.MODE_NIGHT_NO,
@@ -69,7 +69,7 @@ class ThemeSelectionActivity : BaseClass() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             } else {
-                onBackPressed()
+                handleBackPressed()
             }
         }
     }

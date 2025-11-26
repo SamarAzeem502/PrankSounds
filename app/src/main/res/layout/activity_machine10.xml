@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="bottom"
     android:background="@color/bg_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".UI.machine1">
+    tools:context=".UI.Machine10">
 
     <RelativeLayout
         android:id="@+id/animal"
@@ -40,10 +40,10 @@
             android:id="@+id/home_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="8dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:contentDescription="@string/app_name"
+            android:padding="8dp"
             android:src="@drawable/icon_arrow_back"
             app:tint="@color/white" />
     </RelativeLayout>
@@ -76,16 +76,7 @@
     <FrameLayout
         android:id="@+id/adaptive"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_weight="1">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/ad_is_loading" />
-    </FrameLayout>
-
-
+        android:layout_weight="1" />
 </LinearLayout>

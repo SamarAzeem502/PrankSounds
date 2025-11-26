@@ -6,10 +6,9 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatDelegate
-import com.`fun`.hairclipper.tools.AppPrefs
-import com.`fun`.hairclipper.tools.LocaleNow
-import com.`fun`.hairclipper.tools.PaymentSubscription
-import com.`fun`.hairclipper.tools.Tool
+import com.`fun`.hairclipper.helpers.AppPrefs
+import com.`fun`.hairclipper.helpers.LocaleNow
+import com.`fun`.hairclipper.helpers.PaymentSubscription
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
@@ -21,7 +20,7 @@ class MyApplication : Application() {
         super.onCreate()
         MobileAds.initialize(this)
         AppCompatDelegate.setDefaultNightMode(AppPrefs.getAppTheme(this, "app_theme"))
-        if (paymentSubscription.isPurchased.not() && Tool.isNetworkAvailable(this)) {
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
             AppOpenManager(this)
         }
     }

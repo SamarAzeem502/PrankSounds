@@ -8,7 +8,7 @@
     android:background="@color/bg_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".UI.machine9">
+    tools:context=".UI.Machine9">
 
     <RelativeLayout
         android:id="@+id/animal"
@@ -75,16 +75,10 @@
     <FrameLayout
         android:id="@+id/adaptive"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_gravity="bottom"
-        android:layout_weight="1">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/ad_is_loading" />
-    </FrameLayout>
+        android:layout_weight="1"/>
 
 
 </LinearLayout>

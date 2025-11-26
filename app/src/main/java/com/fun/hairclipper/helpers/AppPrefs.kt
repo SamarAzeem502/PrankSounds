@@ -1,7 +1,6 @@
-package com.`fun`.hairclipper.tools
+package com.`fun`.hairclipper.helpers
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 

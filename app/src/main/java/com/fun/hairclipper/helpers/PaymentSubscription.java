@@ -1,4 +1,4 @@
-package com.fun.hairclipper.tools;
+package com.fun.hairclipper.helpers;
 
 import android.app.Activity;
 import android.content.Context;

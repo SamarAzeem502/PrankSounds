@@ -10,8 +10,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_color">
+        android:layout_height="0dp"
+        android:background="@color/bg_color"
+        app:layout_constraintBottom_toTopOf="@+id/frameBanner"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/text"
@@ -80,8 +82,8 @@
             android:backgroundTint="@color/red"
             android:drawableEnd="@drawable/ic_start"
             android:fontFamily="@font/alegreya_italic"
-            android:text="@string/start"
             android:paddingHorizontal="12dp"
+            android:text="@string/start"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:visibility="invisible"
@@ -95,16 +97,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/red"
             android:background="@drawable/bg_card"
+            android:backgroundTint="@color/red"
             android:drawableEnd="@drawable/ic_start"
             android:fontFamily="@font/alegreya_italic"
+            android:paddingHorizontal="12dp"
             android:text="@string/continue_with_pro"
             android:textColor="@color/white"
-            android:paddingHorizontal="12dp"
             android:textSize="@dimen/_18sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/frameBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

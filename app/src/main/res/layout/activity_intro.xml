@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".UI.IntroActivity">
 
     <androidx.viewpager2.widget.ViewPager2

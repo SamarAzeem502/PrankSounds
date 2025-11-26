@@ -1,126 +1,51 @@
-package com.fun.hairclipper.UI;
+package com.`fun`.hairclipper.UI
 
-import android.content.Intent;
-import android.media.AudioManager;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.content.Intent
+import android.media.AudioManager
+import android.os.Bundle
+import android.view.View
+import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.internetConnection
+import com.`fun`.hairclipper.databinding.ActivityChangeTrimmerBinding
 
-import com.fun.hairclipper.R;
-import com.fun.hairclipper.tools.Tool;
-import com.google.ads.mediation.admob.AdMobAdapter;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
+class ChangeTrimmerActivity : BaseClass() {
+    private val binding by lazy { ActivityChangeTrimmerBinding.inflate(layoutInflater) }
+    private lateinit var audioManager: AudioManager
 
-public class ChangeTrimmerActivity extends BaseClass {
-    private FrameLayout frameLayout;
-    private AudioManager audioManager = null;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+        volumeControlStream = AudioManager.STREAM_MUSIC
+        setVolumeMax()
+        loadCollapsibleBanner()
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_trimmer);
-        frameLayout = findViewById(R.id.adaptivemain);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        setVolumeMax();
-        if (!getPaymentSubscription().isPurchased() && Tool.isNetworkAvailable(this)) {
-            loadCollapsibleBanner();
+        binding.homeBtn.setOnClickListener { finish() }
+        binding.machine1.setOnClickListener { startActivity(Intent(this, Machine1::class.java)) }
+        binding.machine2.setOnClickListener { startActivity(Intent(this, Machine2::class.java)) }
+        binding.machine3.setOnClickListener { startActivity(Intent(this, Machine3::class.java)) }
+        binding.machine4.setOnClickListener { startActivity(Intent(this, Machine4::class.java)) }
+        binding.machine5.setOnClickListener { startActivity(Intent(this, Machine5::class.java)) }
+        binding.machine6.setOnClickListener { startActivity(Intent(this, Machine6::class.java)) }
+        binding.machine7.setOnClickListener { startActivity(Intent(this, Machine7::class.java)) }
+        binding.machine8.setOnClickListener { startActivity(Intent(this, Machine8::class.java)) }
+        binding.machine9.setOnClickListener { startActivity(Intent(this, Machine9::class.java)) }
+        binding.machine10.setOnClickListener { startActivity(Intent(this, Machine10::class.java)) }
+        binding.machine11.setOnClickListener { startActivity(Intent(this, Machine11::class.java)) }
+        binding.machine12.setOnClickListener { startActivity(Intent(this, Machine12::class.java)) }
+        binding.machine13.setOnClickListener { startActivity(Intent(this, Machine13::class.java)) }
+    }
+
+    private fun loadCollapsibleBanner() {
+        if (!paymentSubscription.isPurchased && internetConnection(this)) {
+            BannerAd.loadTop(binding.adaptivemain, getString(R.string.CollapsibleBannerAd), true)
         } else {
-            frameLayout.setVisibility(View.GONE);
+            binding.adaptivemain.visibility = View.GONE
         }
-        ImageView home = findViewById(R.id.home_btn);
-        home.setOnClickListener(view -> {
-            finish();
-        });
-        ImageView machine1 = findViewById(R.id.machine1);
-        machine1.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine1.class);
-            startActivity(intent);
-        });
-        ImageView machine2 = findViewById(R.id.machine2);
-        machine2.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine2.class);
-            startActivity(intent);
-        });
-        ImageView machine3 = findViewById(R.id.machine3);
-        machine3.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine3.class);
-            startActivity(intent);
-        });
-        ImageView machine4 = findViewById(R.id.machine4);
-        machine4.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine4.class);
-            startActivity(intent);
-        });
-        ImageView machine5 = findViewById(R.id.machine5);
-        machine5.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine5.class);
-            startActivity(intent);
-        });
-        ImageView machine6 = findViewById(R.id.machine6);
-        machine6.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine6.class);
-            startActivity(intent);
-        });
-        ImageView machine7 = findViewById(R.id.machine7);
-        machine7.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine7.class);
-            startActivity(intent);
-
-        });
-        ImageView machine8 = findViewById(R.id.machine8);
-        machine8.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine8.class);
-            startActivity(intent);
-
-        });
-        ImageView machine9 = findViewById(R.id.machine9);
-        machine9.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine9.class);
-            startActivity(intent);
-
-        });
-        ImageView machine10 = findViewById(R.id.machine10);
-        machine10.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine10.class);
-            startActivity(intent);
-
-        });
-        ImageView machine11 = findViewById(R.id.machine11);
-        machine11.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine11.class);
-            startActivity(intent);
-
-        });
-        ImageView machine12 = findViewById(R.id.machine12);
-        machine12.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine12.class);
-            startActivity(intent);
-
-        });
-        ImageView machine13 = findViewById(R.id.machine13);
-        machine13.setOnClickListener(view -> {
-            Intent intent = new Intent(ChangeTrimmerActivity.this, machine13.class);
-            startActivity(intent);
-        });
     }
 
-    private void loadCollapsibleBanner() {
-        Bundle extras = new Bundle();
-        extras.putString("collapsible", "top");
-        AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
-        AdView adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.CollapsibleBannerAd));
-        frameLayout.addView(adView);
-        AdSize adSize = getAdSize();
-        adView.setAdSize(adSize);
-        adView.loadAd(adRequest);
-    }
-
-    private void setVolumeMax() {
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
+    private fun setVolumeMax() {
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0)
     }
 }

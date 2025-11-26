@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.edit
-import com.`fun`.hairclipper.Constants
+import com.`fun`.hairclipper.helpers.Constants
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.adaptor.LanguageAdapter
 import com.`fun`.hairclipper.databinding.ActivityLanguageSelectionBinding
-import com.`fun`.hairclipper.tools.AdsManager
-import com.`fun`.hairclipper.tools.LocaleNow
-import com.`fun`.hairclipper.tools.Tool
+import com.`fun`.hairclipper.helpers.AdsManager
+import com.`fun`.hairclipper.helpers.LocaleNow
+import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -48,29 +48,21 @@ class LanguageSelection : BaseClass() {
             LocaleNow.changeLanguage(this, "en")
         }
 
-        if (paymentSubscription.isPurchased.not() && Tool.isNetworkAvailable(this)) {
-            languageNativeAd()
-        } else {
-            binding.frameLangNative.visibility = View.GONE
-        }
+        languageNativeAd()
     }
 
     private fun languageNativeAd() {
-        val builder = AdLoader.Builder(this, getString(R.string.native_ad))
-            .forNativeAd { nativeAd: NativeAd ->
-                @SuppressLint("InflateParams") val adView = layoutInflater
-                    .inflate(R.layout.native_new, null) as NativeAdView
-                AdsManager.populateUnifiedNativeAdView(nativeAd, adView)
-                binding.frameLangNative.removeAllViews()
-                binding.frameLangNative.addView(adView)
-            }.withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(p0: LoadAdError) {
-                    super.onAdFailedToLoad(p0)
-                    binding.frameLangNative.visibility = View.GONE
-                }
-
-            })
-        builder.build().loadAd(AdRequest.Builder().build())
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
+            com.`fun`.hairclipper.admobHelper.NativeAd.load(
+                binding.frameLangNative,
+                getString(R.string.native_ad),
+                "","","",
+                false,
+                ""
+            ){}
+        }else{
+            binding.frameLangNative.visibility = View.GONE
+        }
     }
 
     override fun handleBackPressed() {

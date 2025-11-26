@@ -4,13 +4,14 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.GravityCompat
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.admobHelper.analytics
@@ -29,7 +30,7 @@ class NewMainMenu : BaseClass() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        analytics.logEvent("main_menu_activity",null)
+        analytics.logEvent("main_menu_activity", null)
         loadInterstitial()
         loadMainNativeAd()
 
@@ -195,7 +196,7 @@ class NewMainMenu : BaseClass() {
         }
 
         backDialog = builder.create()
-        backDialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        backDialog!!.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         backDialog!!.show()
     }
 
@@ -205,23 +206,25 @@ class NewMainMenu : BaseClass() {
     }
 
     private fun loadInterstitial() {
-        val adRequest = AdRequest.Builder().build()
-        InterstitialAd.load(
-            this, getString(R.string.Interstitial), adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    // The mInterstitialAd reference will be null until
-                    // an ad is loaded.
-                    mInterstitialAd = interstitialAd
-                    Log.i(ContentValues.TAG, "onAdLoaded")
-                }
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
+            val adRequest = AdRequest.Builder().build()
+            InterstitialAd.load(
+                this, getString(R.string.Interstitial), adRequest,
+                object : InterstitialAdLoadCallback() {
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd
+                        Log.i(ContentValues.TAG, "onAdLoaded")
+                    }
 
-                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    // Handle the error
-                    Log.d(ContentValues.TAG, loadAdError.toString())
-                    mInterstitialAd = null
-                }
-            })
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                        // Handle the error
+                        Log.d(ContentValues.TAG, loadAdError.toString())
+                        mInterstitialAd = null
+                    }
+                })
+        }
     }
 
     private fun loadMainNativeAd() {
@@ -237,7 +240,7 @@ class NewMainMenu : BaseClass() {
     }
 
     override fun onDestroy() {
-        analytics.logEvent("main_menu_activity_destroy",null)
+        analytics.logEvent("main_menu_activity_destroy", null)
         super.onDestroy()
     }
 }

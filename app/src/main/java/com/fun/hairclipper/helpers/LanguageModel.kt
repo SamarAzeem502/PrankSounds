@@ -1,4 +1,4 @@
-package com.`fun`.hairclipper.tools
+package com.`fun`.hairclipper.helpers
 
 data class LanguageModel(
     val language: Int,

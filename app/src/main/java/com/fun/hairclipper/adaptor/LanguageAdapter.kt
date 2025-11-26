@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.databinding.LanguageItemBinding
-import com.`fun`.hairclipper.tools.AppPrefs
-import com.`fun`.hairclipper.tools.LanguageModel
+import com.`fun`.hairclipper.helpers.AppPrefs
+import com.`fun`.hairclipper.helpers.LanguageModel
 
 class LanguageAdapter(
     private val activity: Activity,

@@ -1,338 +1,256 @@
-package com.fun.hairclipper.UI;
+package com.`fun`.hairclipper.UI
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Bundle
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.SeekBar
+import android.widget.Toast
+import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.internetConnection
+import com.`fun`.hairclipper.databinding.ActivityFartBinding
 
-import androidx.cardview.widget.CardView;
-
-import com.airbnb.lottie.LottieAnimationView;
-import com.fun.hairclipper.R;
-import com.fun.hairclipper.admobHelper.MyApplication;
-import com.fun.hairclipper.tools.Tool;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-
-import java.util.Objects;
-
-public class FartActivity extends BaseClass {
-    MediaPlayer player, loopPlayer;
-    private SeekBar volumeSeekbar = null;
-    private AudioManager audioManager = null;
-    String soundSelect = "bike";
-    Boolean loopStatus = false;
-    ImageView imageView, loopImageView;
-    private FrameLayout frameLayout;
-    private InterstitialAd mInterstitialAd;
+class FartActivity : BaseClass() {
+    private val binding by lazy { ActivityFartBinding.inflate(layoutInflater) }
+    private var player: MediaPlayer? = null
+    private var loopPlayer: MediaPlayer? = null
+    private lateinit var audioManager: AudioManager
+    private lateinit var shakeAnimation: Animation
+    private var soundSelect: String = "bike"
+    private var loopStatus: Boolean = false
 
     @SuppressLint("ClickableViewAccessibility")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fart);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        imageView = findViewById(R.id.imagehiorn);
-        loopImageView = findViewById(R.id.loopImage);
-        frameLayout = findViewById(R.id.adaptiveFart);
-        if (!getPaymentSubscription().isPurchased() && Tool.isNetworkAvailable(this)) {
-            loadBanner();
-        } else {
-            frameLayout.setVisibility(View.GONE);
-        }
-        initControls();
-        LottieAnimationView splashscreeny;
-        splashscreeny = findViewById(R.id.lott);
-        splashscreeny.animate();
-        Animation shake;
-        shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-        Button loopButton = findViewById(R.id.loopButton);
-        loopButton.setText(R.string.start_loop);
-        loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0);
-        loopButton.setOnClickListener(v -> {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-            if (!loopStatus) {
-                loopImageView.setVisibility(View.VISIBLE);
-                loopButton.setText(R.string.stop_loop);
-                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0);
-                loopStatus = true;
-                splashscreeny.setVisibility(View.VISIBLE);
-                if (soundSelect.equals("bike")) {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.bubbles);
-                } else if (soundSelect.equals("police")) {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.poop);
-                } else if (soundSelect.equals("ambulance")) {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.wet);
-                } else {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.dripping);
-                }
+        volumeControlStream = AudioManager.STREAM_MUSIC
+        shakeAnimation = AnimationUtils.loadAnimation(applicationContext, R.anim.shake)
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
 
-                player.start();
-                player.setLooping(true);
-                imageView.startAnimation(shake);
-                splashscreeny.playAnimation();
-            } else {
-                loopImageView.setVisibility(View.GONE);
-                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0);
-                loopButton.setText(R.string.start_loop);
-                loopStatus = false;
-                player.stop();
-                player.release();
-                imageView.clearAnimation();
-                splashscreeny.pauseAnimation();
-                splashscreeny.setVisibility(View.GONE);
-
-            }
-
-
-//            if (!loopPlayer.isPlaying()){
-//                loopPlayer.start();
-//                    loopPlayer.setLooping(true);
-//                    loopButton.setText(R.string.stop_loop);
-//                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0);
-//
-//            }else {
-//                loopPlayer.pause();
-//                //loopPlayer.release();
-//                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0);
-//                loopButton.setText(R.string.start_loop);
-//
-//            }
-        });
-        ImageView home = findViewById(R.id.home_btn);
-        home.setOnClickListener(view -> {
-            finish();
-        });
-        loopImageView.setOnClickListener(v -> Toast.makeText(FartActivity.this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show());
-        imageView.setOnTouchListener((v, event) -> {
-
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                splashscreeny.setVisibility(View.VISIBLE);
-                if (soundSelect.equals("bike")) {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.bubbles);
-                } else if (soundSelect.equals("police")) {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.poop);
-                } else if (soundSelect.equals("ambulance")) {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.wet);
-                } else {
-                    player = MediaPlayer.create(FartActivity.this, R.raw.dripping);
-                }
-
-                player.start();
-                player.setLooping(true);
-                imageView.startAnimation(shake);
-                splashscreeny.playAnimation();
-
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                player.stop();
-                player.release();
-                imageView.clearAnimation();
-                splashscreeny.pauseAnimation();
-                splashscreeny.setVisibility(View.GONE);
-
-
-            }
-            return true;
-
-        });
-
+        loadBanner()
+        initControls()
+        setupMainActionListeners()
     }
 
-    @Override
-    public void onBackPressed() {
-        if (loopStatus) {
-            cleanUpMediaPlayer();
+
+    private fun setupMainActionListeners() {
+        binding.loopButton.apply {
+            setText(R.string.start_loop)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
+            setOnClickListener {
+                if (!loopStatus) {
+                    // Start Loop
+                    binding.loopImage.visibility = View.VISIBLE
+                    setText(R.string.stop_loop)
+                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0)
+                    loopStatus = true
+                    startSoundAndAnimation(isLoopingAudio = true)
+                } else {
+                    // Stop Loop
+                    binding.loopImage.visibility = View.GONE
+                    setText(R.string.start_loop)
+                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
+                    loopStatus = false
+                    stopSoundAndAnimation()
+                }
+            }
         }
-        super.onBackPressed();
+
+        binding.homeBtn.setOnClickListener {
+            finish()
+        }
+
+        binding.loopImage.setOnClickListener {
+            Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.imagehiorn.setOnTouchListener { _, event ->
+            if (loopStatus) return@setOnTouchListener true
+
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> startSoundAndAnimation(isLoopingAudio = true)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> stopSoundAndAnimation()
+            }
+            true
+        }
     }
 
-    private void initControls() {
-        loopPlayer = MediaPlayer.create(FartActivity.this, R.raw.bubbles);
+    private fun startSoundAndAnimation(isLoopingAudio: Boolean) {
+        stopAndReleasePlayer()
+        player = createPlayerForSelectedSound()
 
-        CardView card1 = findViewById(R.id.sound1);
-        CardView card2 = findViewById(R.id.sound2);
-        CardView card3 = findViewById(R.id.sound3);
-        CardView card4 = findViewById(R.id.sound4);
+        player?.let {
+            it.isLooping = isLoopingAudio
+            it.start()
+            binding.lott.visibility = View.VISIBLE
+            binding.lott.playAnimation()
+            binding.imagehiorn.startAnimation(shakeAnimation)
+        }
+    }
 
-        TextView text1 = findViewById(R.id.text_sound1);
-        TextView text2 = findViewById(R.id.text_sound2);
-        TextView text3 = findViewById(R.id.text_sound3);
-        TextView text4 = findViewById(R.id.text_sound4);
+    private fun stopSoundAndAnimation() {
+        stopAndReleasePlayer()
+        binding.imagehiorn.clearAnimation()
+        binding.lott.pauseAnimation()
+        binding.lott.visibility = View.GONE
+    }
 
-        text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-        imageView.setBackgroundResource(R.drawable.fart1);
-        soundSelect = "bike";
-        card1.setOnClickListener(v -> {
-            if (!loopStatus) {
+    private fun createPlayerForSelectedSound(): MediaPlayer? {
+        val resourceId = when (soundSelect) {
+            "bike" -> R.raw.bubbles
+            "police" -> R.raw.poop
+            "ambulance" -> R.raw.wet
+            "truck" -> R.raw.dripping
+            else -> R.raw.dripping
+        }
+        return MediaPlayer.create(this, resourceId)
+    }
 
-                imageView.setBackgroundResource(R.drawable.fart1);
-                loopPlayer = MediaPlayer.create(FartActivity.this, R.raw.bubbles);
-                text1.setText("");
-                text2.setText(R.string.poop);
-                text3.setText(R.string.wet_fart);
-                text4.setText(R.string.dripping);
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                soundSelect = "bike";
+    override fun handleBackPressed() {
+        stopAndReleasePlayer()
+        super.handleBackPressed()
+    }
 
-            } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
+    private fun initControls() {
+        val textViews = listOf(
+            binding.textSound1,
+            binding.textSound2,
+            binding.textSound3,
+            binding.textSound4
+        )
+
+        fun updateSelectionUI(
+            selectedIndex: Int,
+            selectedSound: String,
+            imageRes: Int,
+            soundRes: Int
+        ) {
+            if (loopStatus) {
+                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
+                return
             }
 
-        });
-        card2.setOnClickListener(v -> {
-            if (!loopStatus) {
+            soundSelect = selectedSound
+            binding.imagehiorn.setBackgroundResource(imageRes)
+            loopPlayer?.release()
+            loopPlayer = MediaPlayer.create(this, soundRes)
 
-                imageView.setBackgroundResource(R.drawable.fart2);
-                loopPlayer = MediaPlayer.create(FartActivity.this, R.raw.poop);
-                text1.setText(R.string.bubbles);
-                text2.setText("");
-                text3.setText(R.string.wet_fart);
-                text4.setText(R.string.dripping);
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                soundSelect = "police";
-            } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
+            val stringResources =
+                listOf(R.string.bubbles, R.string.poop, R.string.wet_fart, R.string.dripping)
+            textViews.forEachIndexed { index, textView ->
+                if (index == selectedIndex) {
+                    textView.text = ""
+                    textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down)
+                } else {
+                    textView.setText(stringResources[index])
+                    textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                }
             }
+        }
 
+        updateSelectionUI(0, "bike", R.drawable.fart1, R.raw.bubbles)
 
-        });
-        card3.setOnClickListener(v -> {
-            if (!loopStatus) {
+        binding.sound1.setOnClickListener {
+            updateSelectionUI(
+                0,
+                "bike",
+                R.drawable.fart1,
+                R.raw.bubbles
+            )
+        }
+        binding.sound2.setOnClickListener {
+            updateSelectionUI(
+                1,
+                "police",
+                R.drawable.fart2,
+                R.raw.poop
+            )
+        }
+        binding.sound3.setOnClickListener {
+            updateSelectionUI(
+                2,
+                "ambulance",
+                R.drawable.fart3,
+                R.raw.wet
+            )
+        }
+        binding.sound4.setOnClickListener {
+            updateSelectionUI(
+                3,
+                "truck",
+                R.drawable.fart4,
+                R.raw.dripping
+            )
+        }
 
-                imageView.setBackgroundResource(R.drawable.fart3);
-                loopPlayer = MediaPlayer.create(FartActivity.this, R.raw.wet);
-                text1.setText(R.string.bubbles);
-                text2.setText(R.string.poop);
-                text3.setText("");
-                text4.setText(R.string.dripping);
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                soundSelect = "ambulance";
-            } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
+        setupVolumeControls()
+    }
 
-            }
+    private fun setupVolumeControls() {
+        binding.volumeLow.setOnClickListener {
+            binding.seekbar1.progress -= 1
+        }
+        binding.volumeUp.setOnClickListener {
+            binding.seekbar1.progress += 1
+        }
 
-        });
-        card4.setOnClickListener(v -> {
-            if (!loopStatus) {
-
-                imageView.setBackgroundResource(R.drawable.fart4);
-                loopPlayer = MediaPlayer.create(FartActivity.this, R.raw.dripping);
-                text1.setText(R.string.bubbles);
-                text2.setText(R.string.poop);
-                text3.setText(R.string.wet_fart);
-                text4.setText("");
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                soundSelect = "truck";
-            } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
-
-            }
-
-        });
-
-        ImageView low = findViewById(R.id.volumeLow);
-        low.setOnClickListener(v -> {
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index - 1);
-        });
-        ImageView high = findViewById(R.id.volumeUp);
-        high.setOnClickListener(v -> {
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index + 1);
-        });
         try {
-            volumeSeekbar = findViewById(R.id.seekbar1);
-            audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+            binding.seekbar1.max = 20
+            binding.seekbar1.progress = 15
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 15, 0)
 
-            volumeSeekbar.setMax(audioManager
-                    .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-            volumeSeekbar.setProgress(audioManager
-                    .getStreamVolume(AudioManager.STREAM_MUSIC));
-            volumeSeekbar.setMax(20);
-            volumeSeekbar.setProgress(15);
-            int pro = volumeSeekbar.getProgress();
-
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, pro, 0);
-
-            volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                @Override
-                public void onStopTrackingTouch(SeekBar arg0) {
+            binding.seekbar1.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0)
                 }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar arg0) {
-                }
-
-                @Override
-                public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                            progress, 0);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            // mediaVlmSeekBar = (SeekBar) findViewById(R.id.seekBar1);
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index + 1);
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index - 1);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    public void cleanUpMediaPlayer() {
-        if (player != null) {
-            if (player.isPlaying()) {
-                player.stop();
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                binding.seekbar1.progress += 1
+                return true
             }
-            player.release();
+
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                binding.seekbar1.progress -= 1
+                return true
+            }
         }
+        return super.onKeyDown(keyCode, event)
     }
 
-    private void loadBanner() {
-        AdView adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.BannerAd));
-        frameLayout.addView(adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        AdSize adSize = getAdSize();
-        adView.setAdSize(adSize);
-        adView.loadAd(adRequest);
+    private fun stopAndReleasePlayer() {
+        player?.apply {
+            if (isPlaying) stop()
+            release()
+        }
+        player = null
+    }
+
+    private fun loadBanner() {
+        if (!paymentSubscription.isPurchased && internetConnection(this)) {
+            BannerAd.load(binding.adaptiveFart, getString(R.string.BannerAd), false)
+        } else {
+            binding.adaptiveFart.visibility = View.GONE
+        }
     }
 }

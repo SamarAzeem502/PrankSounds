@@ -1,6 +1,7 @@
-package com.`fun`.hairclipper
+package com.`fun`.hairclipper.helpers
 
-import com.`fun`.hairclipper.tools.LanguageModel
+import com.`fun`.hairclipper.BuildConfig
+import com.`fun`.hairclipper.R
 
 object Constants {
     const val KEY_SELECTED_LANG = "${BuildConfig.APPLICATION_ID}.KEY_SELECTED_LANG"

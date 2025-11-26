@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/bg_color"
     android:orientation="vertical"
-    tools:context=".UI.machine13">
+    tools:context=".UI.Machine13">
 
     <RelativeLayout
         android:id="@+id/animal"

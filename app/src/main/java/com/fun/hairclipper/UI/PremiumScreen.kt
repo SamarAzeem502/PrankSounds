@@ -3,7 +3,7 @@ package com.`fun`.hairclipper.UI
 import android.os.Bundle
 import com.android.billingclient.api.ProductDetails
 import com.`fun`.hairclipper.databinding.ActivityPremiumBinding
-import com.`fun`.hairclipper.tools.PaymentSubscription
+import com.`fun`.hairclipper.helpers.PaymentSubscription
 
 class PremiumScreen : BaseClass(), PaymentSubscription.ItemDetailsListener {
     private val binding by lazy { ActivityPremiumBinding.inflate(layoutInflater) }

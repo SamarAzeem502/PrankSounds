@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".UI.NewMainMenu">
 
@@ -95,8 +94,11 @@
                     android:id="@+id/trimmerMenu"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_150sdp"
-                    android:layout_margin="@dimen/_10sdp"
-                    app:cardUseCompatPadding="true">
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:layout_marginHorizontal="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -158,8 +160,10 @@
                     android:id="@+id/fartCard"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_150sdp"
-                    android:layout_margin="@dimen/_10sdp"
-                    app:cardUseCompatPadding="true">
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:layout_marginHorizontal="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -219,25 +223,20 @@
                 <FrameLayout
                     android:id="@+id/frameMainNative"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginVertical="8dp"
-                    android:background="@drawable/bg_card"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/ad_is_loading" />
-                </FrameLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/airHornCard"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_150sdp"
-                    android:layout_margin="@dimen/_10sdp"
-                    app:cardUseCompatPadding="true">
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:layout_marginHorizontal="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -298,8 +297,10 @@
                     android:id="@+id/stunGunCard"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_150sdp"
-                    android:layout_margin="@dimen/_10sdp"
-                    app:cardUseCompatPadding="true">
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:layout_marginHorizontal="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -360,8 +361,10 @@
                     android:id="@+id/halloweenCard"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_150sdp"
-                    android:layout_margin="@dimen/_10sdp"
-                    app:cardUseCompatPadding="true">
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:layout_marginHorizontal="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"

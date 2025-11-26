@@ -26,16 +26,9 @@
         <FrameLayout
             android:id="@+id/frameBack"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="6dp"
-            android:background="@drawable/bg_card"
-            android:layout_height="200dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/ad_is_loading" />
-        </FrameLayout>
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"

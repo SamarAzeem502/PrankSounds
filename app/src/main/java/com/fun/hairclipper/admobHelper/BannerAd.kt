@@ -53,6 +53,40 @@ object BannerAd {
             adView.loadAd(adRequest.build())
         }
 
+    fun loadTop(adContainer: ViewGroup, adId: String, makeCollapsable: Boolean = true) =
+        adContainer.post {
+            if (internetConnection(adContainer.context).not()) {
+                return@post
+            }
+            val placeholder = LayoutInflater.from(adContainer.context)
+                .inflate(R.layout.banner_ad_placeholder, null, false)
+            adContainer.visibility = View.VISIBLE
+            adContainer.removeAllViews()
+            adContainer.addView(placeholder)
+            val adView = AdView(adContainer.context)
+            adView.adUnitId = adId
+            adView.setAdSize(getAdaptiveAdSize(adView))
+            adView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    adContainer.removeAllViews()
+                    adContainer.addView(adView)
+                    val mContext: Activity = adContainer.context as Activity
+                }
+
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    Log.e("bannerAd", "onAdFailedToLoad: ", Exception(p0.message))
+                    adContainer.removeAllViews()
+                }
+            }
+            val adRequest = AdRequest.Builder()
+            if (makeCollapsable) {
+                adRequest.addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
+                    putString("collapsible", "top")
+                })
+            }
+            adView.loadAd(adRequest.build())
+        }
+
     fun loadMedium(adContainer: ViewGroup, adId: String) =
         adContainer.post {
             if (internetConnection(adContainer.context).not()) {

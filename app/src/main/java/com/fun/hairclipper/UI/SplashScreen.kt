@@ -10,13 +10,13 @@ import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import androidx.core.graphics.drawable.toDrawable
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.admobHelper.AdConstants
+import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
+import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.SplashscreenBinding
-import com.`fun`.hairclipper.tools.Tool
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -41,14 +41,8 @@ class SplashScreen : BaseClass() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
         setContentView(binding.root)
-
-        if (!paymentSubscription.isPurchased && Tool.isNetworkAvailable(this)) {
+        if (!paymentSubscription.isPurchased && internetConnection(this)) {
             prepareToLoadAds()
         } else {
             prepareToLoadAds()
@@ -59,7 +53,6 @@ class SplashScreen : BaseClass() {
                 override fun onAdShowedFullScreenContent() {
                     interstitialAd = null
                 }
-
             }
             prepareGotoNext()
         }
@@ -100,7 +93,16 @@ class SplashScreen : BaseClass() {
     private fun prepareToLoadAds() {
         if (appInitialized) return
         appInitialized = true
-        val allOkay = !paymentSubscription.isPurchased && Tool.isNetworkAvailable(this)
+
+        val allOkay = paymentSubscription.isPurchased.not() && internetConnection(this)
+        RemoteConfig.getRemoteConfig().fetchAndActivate().addOnCompleteListener {
+            if (paymentSubscription.isPurchased.not() && internetConnection(this)
+                && RemoteConfig.getBoolean(RemoteConfig.ENABLE_FULL_SCREEN_NATIVE_AD)
+            ) {
+                loadIntroNativeAd()
+            }
+            loadBannerAd()
+        }
         val time = if (allOkay) 12000L else 6000L
         if (allOkay) {
             loadSplashAd()
@@ -117,6 +119,30 @@ class SplashScreen : BaseClass() {
                 }
             }
         })
+    }
+
+    private fun loadBannerAd() {
+        if (paymentSubscription.isPurchased.not()
+            && internetConnection(this) && RemoteConfig.getBoolean(RemoteConfig.ENABLE_SPLASH_BANNER_AD)
+        ) {
+            BannerAd.load(binding.frameBanner, getBannerAdStrings().trim(), false)
+        } else {
+            binding.frameBanner.visibility = View.GONE
+        }
+    }
+
+    private fun getBannerAdStrings(): String {
+        return if (AdConstants.TEST_ADS) getString(R.string.banner_test_ad_id)
+        else RemoteConfig.getString(
+            RemoteConfig.SPLASH_BANNER_AD_ID
+        )
+    }
+
+    private fun getFullScreenAdStrings(): String {
+        return if (AdConstants.TEST_ADS) getString(R.string.native_test_ad_id)
+        else RemoteConfig.getString(
+            RemoteConfig.FULL_SCREEN_NATIVE_AD_ID
+        )
     }
 
     private fun loadSplashAd() {
@@ -168,9 +194,8 @@ class SplashScreen : BaseClass() {
         if (AdConstants.INTRO_NATIVE_AD == null) {
             val videoOptions =
                 VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(true).build()
-
             val builder = AdLoader.Builder(
-                this, ""
+                this, getFullScreenAdStrings().trim()
             )
                 .forNativeAd { nativeAd: NativeAd ->
                     AdConstants.INTRO_NATIVE_AD = nativeAd

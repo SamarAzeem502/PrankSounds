@@ -1,339 +1,281 @@
-package com.fun.hairclipper.UI;
+package com.`fun`.hairclipper.UI
 
-import android.annotation.SuppressLint;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Bundle
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.SeekBar
+import android.widget.Toast
+import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.internetConnection
+import com.`fun`.hairclipper.databinding.ActivityAirHornBinding
 
-import androidx.cardview.widget.CardView;
-
-import com.airbnb.lottie.LottieAnimationView;
-import com.fun.hairclipper.R;
-import com.fun.hairclipper.tools.Tool;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-
-public class AirHornActivity extends BaseClass {
-    MediaPlayer player, loopPlayer;
-    private SeekBar volumeSeekbar = null;
-    private AudioManager audioManager = null;
-    String soundSelect = "police";
-    Boolean loopStatus = false;
-    ImageView imageView, loopImageView;
-    private FrameLayout frameLayout;
-    private InterstitialAd mInterstitialAd;
+class AirHornActivity : BaseClass() {
+    private val binding by lazy { ActivityAirHornBinding.inflate(layoutInflater) }
+    private var player: MediaPlayer? = null
+    var loopPlayer: MediaPlayer? = null
+    private var audioManager: AudioManager? = null
+    var soundSelect: String = "police"
+    var loopStatus: Boolean = false
 
     @SuppressLint("ClickableViewAccessibility")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_air_horn);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        imageView = findViewById(R.id.imagehiorn);
-        loopImageView = findViewById(R.id.loopImage);
-        frameLayout = findViewById(R.id.adaptiveHorn);
-        if (!getPaymentSubscription().isPurchased() && Tool.isNetworkAvailable(this)) {
-            loadBanner();
-        } else {
-            frameLayout.setVisibility(View.GONE);
-        }
-        initControls();
-        LottieAnimationView splashscreeny;
-        splashscreeny = findViewById(R.id.lott);
-        splashscreeny.animate();
-        Animation shake;
-        shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-        Button loopButton = findViewById(R.id.loopButton);
-        ImageView home = findViewById(R.id.home_btn);
-        home.setOnClickListener(view -> {
-            finish();
-        });
-        loopButton.setText(R.string.start_loop);
-        loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0);
-        loopButton.setOnClickListener(v -> {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        volumeControlStream = AudioManager.STREAM_MUSIC
+        loadBanner()
+        initControls()
+        val shake = AnimationUtils.loadAnimation(applicationContext, R.anim.shake)
+        binding.lott.animate()
+        binding.homeBtn.setOnClickListener { finish() }
+        binding.loopButton.apply {
+            setText(R.string.start_loop)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
+            setOnClickListener {
+                if (!loopStatus) {
+                    binding.loopImage.visibility = View.VISIBLE
+                    setText(R.string.stop_loop)
+                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0)
+                    loopStatus = true
+                    binding.lott.visibility = View.VISIBLE
 
-            if (!loopStatus) {
-                loopImageView.setVisibility(View.VISIBLE);
-                loopButton.setText(R.string.stop_loop);
-                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0);
-                loopStatus = true;
-                splashscreeny.setVisibility(View.VISIBLE);
-                if (soundSelect.equals("bike")) {
-                    player = MediaPlayer.create(AirHornActivity.this, R.raw.bike);
-                } else if (soundSelect.equals("police")) {
-                    player = MediaPlayer.create(AirHornActivity.this, R.raw.police);
-                } else if (soundSelect.equals("ambulance")) {
-                    player = MediaPlayer.create(AirHornActivity.this, R.raw.ambulance);
+                    player = when (soundSelect) {
+                        "bike" -> MediaPlayer.create(this@AirHornActivity, R.raw.bike)
+                        "police" -> MediaPlayer.create(this@AirHornActivity, R.raw.police)
+                        "ambulance" -> MediaPlayer.create(this@AirHornActivity, R.raw.ambulance)
+                        else -> MediaPlayer.create(this@AirHornActivity, R.raw.truck)
+                    }
+
+                    player?.isLooping = true
+                    player?.start()
+                    binding.imagehiorn.startAnimation(shake)
+                    binding.lott.playAnimation()
                 } else {
-                    player = MediaPlayer.create(AirHornActivity.this, R.raw.truck);
+                    binding.loopImage.visibility = View.GONE
+                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
+                    setText(R.string.start_loop)
+                    loopStatus = false
+
+                    player?.stop()
+                    player?.release()
+                    player = null // Clear the reference
+
+                    binding.imagehiorn.clearAnimation()
+                    binding.lott.pauseAnimation()
+                    binding.lott.visibility = View.GONE
+                }
+            }
+        }
+
+        binding.loopImage.setOnClickListener {
+            Toast.makeText(this@AirHornActivity, R.string.stop_loop_first, Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        binding.imagehiorn.setOnTouchListener { _, event: MotionEvent? ->
+            if (loopStatus) return@setOnTouchListener true
+
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    binding.lott.visibility = View.VISIBLE
+                    player = when (soundSelect) {
+                        "bike" -> MediaPlayer.create(this@AirHornActivity, R.raw.bike)
+                        "police" -> MediaPlayer.create(this@AirHornActivity, R.raw.police)
+                        "ambulance" -> MediaPlayer.create(this@AirHornActivity, R.raw.ambulance)
+                        else -> MediaPlayer.create(this@AirHornActivity, R.raw.truck)
+                    }
+
+                    player?.isLooping = true
+                    player?.start()
+                    binding.imagehiorn.startAnimation(shake)
+                    binding.lott.playAnimation()
                 }
 
-                player.start();
-                player.setLooping(true);
-                imageView.startAnimation(shake);
-                splashscreeny.playAnimation();
-            } else {
-                loopImageView.setVisibility(View.GONE);
-                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0);
-                loopButton.setText(R.string.start_loop);
-                loopStatus = false;
-                player.stop();
-                player.release();
-                imageView.clearAnimation();
-                splashscreeny.pauseAnimation();
-                splashscreeny.setVisibility(View.GONE);
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    player?.stop()
+                    player?.release()
+                    player = null // Clear the reference
 
-            }
-
-
-//            if (!loopPlayer.isPlaying()){
-//                loopPlayer.start();
-//                    loopPlayer.setLooping(true);
-//                    loopButton.setText(R.string.stop_loop);
-//                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0);
-//
-//            }else {
-//                loopPlayer.pause();
-//                //loopPlayer.release();
-//                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0);
-//                loopButton.setText(R.string.start_loop);
-//
-//            }
-        });
-
-        loopImageView.setOnClickListener(v -> Toast.makeText(AirHornActivity.this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show());
-        imageView.setOnTouchListener((v, event) -> {
-
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                splashscreeny.setVisibility(View.VISIBLE);
-                switch (soundSelect) {
-                    case "bike":
-                        player = MediaPlayer.create(AirHornActivity.this, R.raw.bike);
-                        break;
-                    case "police":
-                        player = MediaPlayer.create(AirHornActivity.this, R.raw.police);
-                        break;
-                    case "ambulance":
-                        player = MediaPlayer.create(AirHornActivity.this, R.raw.ambulance);
-                        break;
-                    default:
-                        player = MediaPlayer.create(AirHornActivity.this, R.raw.truck);
-                        break;
+                    binding.imagehiorn.clearAnimation()
+                    binding.lott.pauseAnimation()
+                    binding.lott.visibility = View.GONE
                 }
-
-                player.start();
-                player.setLooping(true);
-                imageView.startAnimation(shake);
-                splashscreeny.playAnimation();
-
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                player.stop();
-                player.release();
-                imageView.clearAnimation();
-                splashscreeny.pauseAnimation();
-                splashscreeny.setVisibility(View.GONE);
-
-
             }
-            return true;
-
-        });
-
+            true
+        }
     }
 
-    @Override
-    public void onBackPressed() {
+    override fun handleBackPressed() {
         if (loopStatus) {
-            cleanUpMediaPlayer();
+            cleanUpMediaPlayer()
         }
-        super.onBackPressed();
+        super.handleBackPressed()
     }
 
-    private void initControls() {
-        loopPlayer = MediaPlayer.create(AirHornActivity.this, R.raw.bike);
+    private fun initControls() {
+        loopPlayer = MediaPlayer.create(this@AirHornActivity, R.raw.bike)
+        binding.textSound2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down)
+        binding.imagehiorn.setBackgroundResource(R.drawable.vehicle2)
+        soundSelect = "police"
 
-        CardView card1 = findViewById(R.id.sound1);
-        CardView card2 = findViewById(R.id.sound2);
-        CardView card3 = findViewById(R.id.sound3);
-        CardView card4 = findViewById(R.id.sound4);
-
-        TextView text1 = findViewById(R.id.text_sound1);
-        TextView text2 = findViewById(R.id.text_sound2);
-        TextView text3 = findViewById(R.id.text_sound3);
-        TextView text4 = findViewById(R.id.text_sound4);
-
-        text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-        imageView.setBackgroundResource(R.drawable.vehicle2);
-        soundSelect = "police";
-        card1.setOnClickListener(v -> {
+        binding.sound1.setOnClickListener {
             if (!loopStatus) {
-
-                imageView.setBackgroundResource(R.drawable.vehicle1);
-                loopPlayer = MediaPlayer.create(AirHornActivity.this, R.raw.bike);
-                text1.setText("");
-                text2.setText(R.string.police);
-                text3.setText(R.string.ambulance);
-                text4.setText(R.string.truck);
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                soundSelect = "bike";
-
+                binding.imagehiorn.setBackgroundResource(R.drawable.vehicle1)
+                loopPlayer = MediaPlayer.create(this@AirHornActivity, R.raw.bike)
+                binding.textSound1.text = ""
+                binding.textSound2.setText(R.string.police)
+                binding.textSound3.setText(R.string.ambulance)
+                binding.textSound4.setText(R.string.truck)
+                binding.textSound1.setCompoundDrawablesWithIntrinsicBounds(
+                    0,
+                    0,
+                    0,
+                    R.drawable.ic_down
+                )
+                binding.textSound2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                soundSelect = "bike"
             } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-
-        });
-        card2.setOnClickListener(v -> {
+        }
+        binding.sound2.setOnClickListener {
             if (!loopStatus) {
-
-                imageView.setBackgroundResource(R.drawable.vehicle2);
-                loopPlayer = MediaPlayer.create(AirHornActivity.this, R.raw.police);
-                text1.setText(R.string.bike);
-                text2.setText("");
-                text3.setText(R.string.ambulance);
-                text4.setText(R.string.truck);
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                soundSelect = "police";
+                binding.imagehiorn.setBackgroundResource(R.drawable.vehicle2)
+                loopPlayer = MediaPlayer.create(this@AirHornActivity, R.raw.police)
+                binding.textSound1.setText(R.string.bike)
+                binding.textSound2.text = ""
+                binding.textSound3.setText(R.string.ambulance)
+                binding.textSound4.setText(R.string.truck)
+                binding.textSound1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound2.setCompoundDrawablesWithIntrinsicBounds(
+                    0,
+                    0,
+                    0,
+                    R.drawable.ic_down
+                )
+                binding.textSound3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                soundSelect = "police"
             } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-
-
-        });
-        card3.setOnClickListener(v -> {
+        }
+        binding.sound3.setOnClickListener {
             if (!loopStatus) {
-                imageView.setBackgroundResource(R.drawable.vehicle3);
-                loopPlayer = MediaPlayer.create(AirHornActivity.this, R.raw.ambulance);
-                text1.setText(R.string.bike);
-                text2.setText(R.string.police);
-                text3.setText("");
-                text4.setText(R.string.truck);
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                soundSelect = "ambulance";
+                binding.imagehiorn.setBackgroundResource(R.drawable.vehicle3)
+                loopPlayer = MediaPlayer.create(this@AirHornActivity, R.raw.ambulance)
+                binding.textSound1.setText(R.string.bike)
+                binding.textSound2.setText(R.string.police)
+                binding.textSound3.text = ""
+                binding.textSound4.setText(R.string.truck)
+                binding.textSound1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound3.setCompoundDrawablesWithIntrinsicBounds(
+                    0,
+                    0,
+                    0,
+                    R.drawable.ic_down
+                )
+                binding.textSound4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                soundSelect = "ambulance"
             } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-
-        });
-        card4.setOnClickListener(v -> {
+        }
+        binding.sound4.setOnClickListener {
             if (!loopStatus) {
-
-                imageView.setBackgroundResource(R.drawable.vehicle4);
-                loopPlayer = MediaPlayer.create(AirHornActivity.this, R.raw.truck);
-                text1.setText(R.string.bike);
-                text2.setText(R.string.police);
-                text3.setText(R.string.ambulance);
-                text4.setText("");
-                text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                text4.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down);
-                soundSelect = "truck";
+                binding.imagehiorn.setBackgroundResource(R.drawable.vehicle4)
+                loopPlayer = MediaPlayer.create(this@AirHornActivity, R.raw.truck)
+                binding.textSound1.setText(R.string.bike)
+                binding.textSound2.setText(R.string.police)
+                binding.textSound3.setText(R.string.ambulance)
+                binding.textSound4.text = ""
+                binding.textSound1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                binding.textSound4.setCompoundDrawablesWithIntrinsicBounds(
+                    0,
+                    0,
+                    0,
+                    R.drawable.ic_down
+                )
+                soundSelect = "truck"
             } else {
-                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
+        }
 
-        });
+        binding.volumeLow.setOnClickListener {
+            binding.seekbar1.progress -= 1
+        }
+        binding.volumeUp.setOnClickListener {
+            binding.seekbar1.progress += 1
+        }
 
-        ImageView low = findViewById(R.id.volumeLow);
-        low.setOnClickListener(v -> {
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index - 1);
-        });
-        ImageView high = findViewById(R.id.volumeUp);
-        high.setOnClickListener(v -> {
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index + 1);
-        });
         try {
-            volumeSeekbar = findViewById(R.id.seekbar1);
-            audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+            audioManager = getSystemService(AUDIO_SERVICE) as? AudioManager
+            audioManager?.let { am ->
+                // The original code set the max/progress twice. This version keeps the second set of hardcoded values to preserve functionality.
+                binding.seekbar1.max = 20
+                binding.seekbar1.progress = 15
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, 15, 0)
 
-            volumeSeekbar.setMax(audioManager
-                    .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-            volumeSeekbar.setProgress(audioManager
-                    .getStreamVolume(AudioManager.STREAM_MUSIC));
-            volumeSeekbar.setMax(20);
-            volumeSeekbar.setProgress(15);
-            int pro = volumeSeekbar.getProgress();
+                binding.seekbar1.setOnSeekBarChangeListener(object :
+                    SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        progress: Int,
+                        fromUser: Boolean
+                    ) {
+                        am.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0)
+                    }
 
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, pro, 0);
-
-            volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                @Override
-                public void onStopTrackingTouch(SeekBar arg0) {
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar arg0) {
-                }
-
-                @Override
-                public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                            progress, 0);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            // mediaVlmSeekBar = (SeekBar) findViewById(R.id.seekBar1);
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index + 1);
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            int index = volumeSeekbar.getProgress();
-            volumeSeekbar.setProgress(index - 1);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    public void cleanUpMediaPlayer() {
-        if (player != null) {
-            if (player.isPlaying()) {
-                player.stop();
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
             }
-            player.release();
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private void loadBanner() {
-        AdView adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.BannerAd));
-        frameLayout.addView(adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        AdSize adSize = getAdSize();
-        adView.setAdSize(adSize);
-        adView.loadAd(adRequest);
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                binding.seekbar1.progress += 1
+                return true
+            }
+
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                binding.seekbar1.progress -= 1
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    private fun cleanUpMediaPlayer() {
+        player?.let {
+            if (it.isPlaying) {
+                it.stop()
+            }
+            it.release()
+        }
+        player = null
+    }
+
+    private fun loadBanner() {
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
+            BannerAd.load(binding.adaptiveHorn, getString(R.string.BannerAd), false)
+        } else {
+            binding.adaptiveHorn.visibility = View.GONE
+        }
     }
 }

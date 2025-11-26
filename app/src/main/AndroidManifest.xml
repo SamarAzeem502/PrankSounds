@@ -53,55 +53,55 @@
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine13"
+            android:name=".UI.Machine13"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine12"
+            android:name=".UI.Machine12"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine11"
+            android:name=".UI.Machine11"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine10"
+            android:name=".UI.Machine10"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine9"
+            android:name=".UI.Machine9"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine8"
+            android:name=".UI.Machine8"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine7"
+            android:name=".UI.Machine7"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine6"
+            android:name=".UI.Machine6"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine5"
+            android:name=".UI.Machine5"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine4"
+            android:name=".UI.Machine4"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine3"
+            android:name=".UI.Machine3"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine2"
+            android:name=".UI.Machine2"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity
-            android:name=".UI.machine1"
+            android:name=".UI.Machine1"
             android:exported="false"
             android:theme="@style/Theme.HairClipper.NoAction" />
         <activity

@@ -15,7 +15,7 @@ import com.`fun`.hairclipper.UI.NewMainMenu
 import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.databinding.FullNativeContainerBinding
 import com.`fun`.hairclipper.databinding.IntroItemBinding
-import com.`fun`.hairclipper.tools.AdsManager
+import com.`fun`.hairclipper.helpers.AdsManager
 import com.google.android.gms.ads.nativead.NativeAdView
 
 class IntroAdapterFullNative(private val activity: IntroActivity) :

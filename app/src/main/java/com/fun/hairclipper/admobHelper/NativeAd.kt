@@ -11,7 +11,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import com.`fun`.hairclipper.R
-import com.`fun`.hairclipper.tools.AdsManager
+import com.`fun`.hairclipper.helpers.AdsManager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest

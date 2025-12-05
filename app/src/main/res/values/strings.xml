@@ -155,5 +155,9 @@
     <string name="_next">Next</string>
     <string name="english_fix">English</string>
     <string name="vehicle_sound_prank">Vehicle Sound Prank</string>
+    <string name="prank_sounds">Prank\nSounds</string>
+    <string name="fart_sounds">Fart\nSounds</string>
+    <string name="hair_clipper">Hair\nClipper</string>
+    <string name="prank_sounds_1">Prank\nSounds</string>
 
 </resources>

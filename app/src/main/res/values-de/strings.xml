@@ -109,4 +109,8 @@
     <string name="one_time_purchase">Einmaliger Kauf</string>
     <string name="fetching">Abrufen…</string>
     <string name="a_one_time_purchase_to_enjoy_the_premium_features_without_worry_of_monthly_subscriptions">Ein einmaliger Kauf, um die Premium-Funktionen zu nutzen, ohne sich um monatliche Abonnements kümmern zu müssen.</string>
+    <string name="prank_sounds">Streich\nGeräusche</string>
+    <string name="fart_sounds">Furz\nGeräusche</string>
+    <string name="hair_clipper">Haar\nschneider</string>
+    <string name="prank_sounds_1">Streich\nGeräusche</string>
 </resources>

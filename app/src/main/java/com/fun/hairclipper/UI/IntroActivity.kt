@@ -2,6 +2,7 @@ package com.`fun`.hairclipper.UI
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.viewpager2.widget.ViewPager2
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.adaptor.IntroAdapterFullNative
@@ -38,6 +39,9 @@ class IntroActivity : BaseClass() {
                         }
 
                         2 -> {
+                            AdConstants.SHOWING_INTER_AD = false
+                        }
+                        3 -> {
                             AdConstants.SHOWING_INTER_AD = false
                         }
                     }

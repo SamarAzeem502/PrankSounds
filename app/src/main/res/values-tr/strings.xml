@@ -58,10 +58,10 @@
     <string name="yearly_plan">Yıllık Plan:</string>
     <string name="monthly_plan">Aylık Plan:</string>
     <string name="to_cancel_your_subscription">Aboneliğinizi İptal etmek için:</string>
-    <string name="_1_open_google_play_store_on_your_android_device">1. Android cihazınızda Google Play Store &amp;apos;u açın.</string>
+    <string name="_1_open_google_play_store_on_your_android_device">1. Android cihazınızda Google Play Store u açın.</string>
     <string name="_2_check_your_google_account">2. Google Hesabınızı kontrol edin.</string>
-    <string name="_3_tap_menu_then_subscriptions">3. Menü &amp;apos;ye ve ardından Abonelikler &amp;apos;e dokunun.</string>
-    <string name="_4_select_the_subscription_and_tap_cancel">4. Aboneliği seçin ve İptal &amp;apos;e dokunun.</string>
+    <string name="_3_tap_menu_then_subscriptions">3. Menü ye ve ardından Abonelikler e dokunun.</string>
+    <string name="_4_select_the_subscription_and_tap_cancel">4. Aboneliği seçin ve İptal e dokunun.</string>
     <string name="_3_days_free_trail">3 gün ücretsiz parkur</string>
     <string name="more_features">Daha Fazla Özellik</string>
     <string name="features">Özellikler</string>
@@ -101,7 +101,7 @@
     <string name="submit">Göndermek</string>
     <string name="we_work_super_hard_to_make_application_better_nfor_you_and_would_love_to_know">Uygulamayı sizin için daha iyi hale getirmek için çok çalışıyoruz ve bunu bilmek isteriz.</string>
     <string name="enjoying_the_app">Uygulamayı beğeniyor musunuz?</string>
-    <string name="continue_with_pro">Pro &amp;apos;ya devam edin!</string>
+    <string name="continue_with_pro">Pro ya devam edin!</string>
     <string name="apply_theme">Temayı Uygula</string>
     <string name="ater_trail_ends">Yol bittikten sonra</string>
     <string name="year">/Yıl</string>
@@ -109,4 +109,8 @@
     <string name="one_time_purchase">Tek Seferlik Satın Alma</string>
     <string name="fetching">Getiriliyor…</string>
     <string name="a_one_time_purchase_to_enjoy_the_premium_features_without_worry_of_monthly_subscriptions">Aylık abonelik endişesi olmadan Premium özelliklerin keyfini çıkarmak için tek seferlik bir satın alma.</string>
+    <string name="prank_sounds">Şaka\nSesleri</string>
+    <string name="fart_sounds">Osuruk\nSesleri</string>
+    <string name="hair_clipper">Tıraş\nMakinesi</string>
+    <string name="prank_sounds_1">Şaka\nSesleri</string>
 </resources>

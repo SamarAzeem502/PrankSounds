@@ -109,4 +109,8 @@
     <string name="one_time_purchase">شراء مرة واحدة</string>
     <string name="fetching">جارٍ الجلب…</string>
     <string name="a_one_time_purchase_to_enjoy_the_premium_features_without_worry_of_monthly_subscriptions">عملية شراء لمرة واحدة للاستمتاع بميزات Premium دون القلق بشأن الاشتراكات الشهرية.</string>
+    <string name="prank_sounds">أصوات\nالمقالب</string>
+    <string name="fart_sounds">أصوات\nالضراط</string>
+    <string name="hair_clipper">ماكينة\nالحلاقة</string>
+    <string name="prank_sounds_1">أصوات\nالمقالب</string>
 </resources>

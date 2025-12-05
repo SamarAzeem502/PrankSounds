@@ -109,4 +109,8 @@
     <string name="one_time_purchase">Разовая покупка</string>
     <string name="fetching">Получение…</string>
     <string name="a_one_time_purchase_to_enjoy_the_premium_features_without_worry_of_monthly_subscriptions">Однократная покупка, чтобы пользоваться премиум-функциями, не беспокоясь о ежемесячных подписках.</string>
+    <string name="prank_sounds">Звуки\nрозыгрыша</string>
+    <string name="fart_sounds">Звуки\nпука</string>
+    <string name="hair_clipper">Машинка для\nстрижки</string>
+    <string name="prank_sounds_1">Звуки\nрозыгрыша</string>
 </resources>

@@ -8,11 +8,14 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.Window
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -172,5 +175,22 @@ open class BaseClass : AppCompatActivity() {
         } catch (e: java.lang.Exception) {
             Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
         }
+    }
+}
+
+fun Activity.hideBackButtonAndStatusBar() {
+    if (Build.VERSION.SDK_INT >= 30) {
+        val insetsController = window.insetsController
+        insetsController?.let {
+            it.hide(WindowInsets.Type.systemBars())
+            it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    } else {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 }

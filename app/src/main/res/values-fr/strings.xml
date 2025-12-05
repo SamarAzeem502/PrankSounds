@@ -109,4 +109,8 @@
     <string name="one_time_purchase">Achat unique</string>
     <string name="fetching">Récupération…</string>
     <string name="a_one_time_purchase_to_enjoy_the_premium_features_without_worry_of_monthly_subscriptions">Un achat unique pour profiter des fonctionnalités Premium sans vous soucier des abonnements mensuels.</string>
+    <string name="prank_sounds">Sons de\nFarces</string>
+    <string name="fart_sounds">Bruits de\nPets</string>
+    <string name="hair_clipper">Tondeuse\nCheveux</string>
+    <string name="prank_sounds_1">Sons de\nFarces</string>
 </resources>

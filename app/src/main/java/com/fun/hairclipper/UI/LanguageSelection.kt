@@ -126,5 +126,4 @@ class LanguageSelection : BaseClass() {
         startActivity(Intent(this, IntroActivity::class.java))
         finish()
     }
-
 }

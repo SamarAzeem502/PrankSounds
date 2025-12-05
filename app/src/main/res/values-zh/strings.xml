@@ -109,4 +109,8 @@
     <string name="one_time_purchase">一次性购买</string>
     <string name="fetching">正在获取…</string>
     <string name="a_one_time_purchase_to_enjoy_the_premium_features_without_worry_of_monthly_subscriptions">一次性购买即可享受高级功能，无需担心每月订阅。</string>
+    <string name="prank_sounds">恶作剧\n声音</string>
+    <string name="fart_sounds">放屁\n声音</string>
+    <string name="hair_clipper">理发\n器</string>
+    <string name="prank_sounds_1">恶作剧\n声音</string>
 </resources>

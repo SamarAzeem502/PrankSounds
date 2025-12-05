@@ -8,7 +8,11 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.ToggleButton
 import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.FullScreenAdListener
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityMachine5Binding
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -16,7 +20,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 class Machine5 : BaseClass() {
     var vibrator: Vibrator? = null
     var mediaPlayer: MediaPlayer? = null
-    private val mInterstitialAd: InterstitialAd? = null
     private val binding by lazy { ActivityMachine5Binding.inflate(layoutInflater) }
 
 
@@ -26,7 +29,7 @@ class Machine5 : BaseClass() {
         loadBannerAd()
 
         val view = findViewById<ImageView>(R.id.home_btn)
-        view.setOnClickListener { finish() }
+        view.setOnClickListener { handleBackPressed() }
         mediaPlayer = MediaPlayer.create(this@Machine5, R.raw.hair_clipper5)
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         binding.toggleButton1.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
@@ -34,27 +37,45 @@ class Machine5 : BaseClass() {
                 vibrator!!.vibrate(300000)
                 mediaPlayer!!.start()
             } else {
-                mInterstitialAd?.show(this@Machine5)
-                vibrator!!.cancel()
-                mediaPlayer!!.stop()
-                mediaPlayer!!.prepareAsync()
+                MyApplication.showInterstitialAdTrimmer(this, object : FullScreenAdListener() {
+                    override fun gotoNext() {
+                        super.gotoNext()
+                        vibrator!!.cancel()
+                        mediaPlayer!!.stop()
+                        mediaPlayer!!.prepareAsync()
+                    }
+                }, "stop_machine_5")
             }
         }
         mediaPlayer!!.setOnCompletionListener {
             vibrator!!.cancel()
-            binding.toggleButton1.setChecked(false)
+            binding.toggleButton1.isChecked = false
         }
     }
 
     override fun handleBackPressed() {
-        super.handleBackPressed()
-        vibrator!!.cancel()
-        mediaPlayer!!.stop()
+        MyApplication.showInterstitialAdTrimmer(this, object : FullScreenAdListener() {
+            override fun gotoNext() {
+                super.gotoNext()
+                vibrator!!.cancel()
+                mediaPlayer!!.stop()
+                finish()
+            }
+        }, "btn_back_m5")
+
     }
 
     private fun loadBannerAd() {
-        if (!paymentSubscription.isPurchased && internetConnection(this)) {
-            BannerAd.load(binding.adaptive, getString(R.string.BannerAd), false)
+        val adId = if (AdConstants.TEST_ADS) {
+            getString(R.string.BannerAd)
+        } else {
+            RemoteConfig.getString(RemoteConfig.MACHINE5_BANNER_AD_ID)
+        }
+        val makeCollapsible = RemoteConfig.getBoolean(RemoteConfig.MACHINE5_BANNER_MAKE_COLLAPSIBLE)
+        val enable = RemoteConfig.getBoolean(RemoteConfig.ENABLE_MACHINE5_BANNER_AD)
+
+        if (paymentSubscription.isPurchased.not() && internetConnection(this) && enable) {
+            BannerAd.load(binding.adaptive, adId.trim(), makeCollapsible)
         } else {
             binding.adaptive.visibility = View.GONE
         }

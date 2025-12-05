@@ -9,7 +9,6 @@ object AdConstants {
     var SHOWING_INTER_AD = false
     var SHOWING_APP_OPEN_AD = false
     var INTERSTITIAL_AD_LOADED = false
-    var rewardedToInterstitialComplete = true
     var rewardedToAppOpenComplete = true
 
     var appOpenToInterstitialCap: CountDownTimer = object : CountDownTimer(
@@ -30,22 +29,6 @@ object AdConstants {
         }
     }
 
-    var rewardedToInterstitial: CountDownTimer = object : CountDownTimer(
-        10000, 1000
-    ) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            rewardedToInterstitialComplete = true
-        }
-    }
-    var rewardedToAppOpen: CountDownTimer = object : CountDownTimer(
-        10000, 1000
-    ) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            rewardedToAppOpenComplete = true
-        }
-    }
     var appOpenToInterstitialCapComplete = true
     var interstitialToAppOpenCapComplete = true
 }

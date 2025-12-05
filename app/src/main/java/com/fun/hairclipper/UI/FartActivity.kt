@@ -12,7 +12,11 @@ import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import android.widget.Toast
 import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.FullScreenAdListener
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityFartBinding
 
@@ -53,18 +57,34 @@ class FartActivity : BaseClass() {
                     loopStatus = true
                     startSoundAndAnimation(isLoopingAudio = true)
                 } else {
-                    // Stop Loop
-                    binding.loopImage.visibility = View.GONE
-                    setText(R.string.start_loop)
-                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
-                    loopStatus = false
-                    stopSoundAndAnimation()
+                    MyApplication.showInterstitialAdFart(
+                        this@FartActivity,
+                        object : FullScreenAdListener() {
+                            override fun gotoNext() {
+                                super.gotoNext()
+                                // Stop Loop
+                                binding.loopImage.visibility = View.GONE
+                                setText(R.string.start_loop)
+                                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
+                                loopStatus = false
+                                stopSoundAndAnimation()
+                            }
+                        },
+                        "stop_loop"
+                    )
+
                 }
             }
         }
 
         binding.homeBtn.setOnClickListener {
-            finish()
+            MyApplication.showInterstitialAdFart(this, object : FullScreenAdListener() {
+                override fun gotoNext() {
+                    super.gotoNext()
+                    finish()
+                }
+            }, "btn_fart_back")
+
         }
 
         binding.loopImage.setOnClickListener {
@@ -114,8 +134,14 @@ class FartActivity : BaseClass() {
     }
 
     override fun handleBackPressed() {
-        stopAndReleasePlayer()
-        super.handleBackPressed()
+        MyApplication.showInterstitialAdFart(this, object : FullScreenAdListener() {
+            override fun gotoNext() {
+                super.gotoNext()
+                stopAndReleasePlayer()
+                finish()
+            }
+        }, "fart_back")
+
     }
 
     private fun initControls() {
@@ -247,8 +273,16 @@ class FartActivity : BaseClass() {
     }
 
     private fun loadBanner() {
-        if (!paymentSubscription.isPurchased && internetConnection(this)) {
-            BannerAd.load(binding.adaptiveFart, getString(R.string.BannerAd), false)
+        val adId = if (AdConstants.TEST_ADS) {
+            getString(R.string.BannerAd)
+        } else {
+            RemoteConfig.getString(RemoteConfig.FART_BANNER_AD_ID)
+        }
+        val makeCollapsible = RemoteConfig.getBoolean(RemoteConfig.FART_BANNER_MAKE_COLLAPSIBLE)
+        val enable = RemoteConfig.getBoolean(RemoteConfig.ENABLE_FART_BANNER_AD)
+
+        if (paymentSubscription.isPurchased.not() && internetConnection(this) && enable) {
+            BannerAd.load(binding.adaptiveFart, adId.trim(), makeCollapsible)
         } else {
             binding.adaptiveFart.visibility = View.GONE
         }

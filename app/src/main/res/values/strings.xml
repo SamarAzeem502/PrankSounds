@@ -15,7 +15,8 @@
     <string name="CollapsibleBannerAd" translatable="false">ca-app-pub-3940256099942544/2014213617</string>
     <string name="Interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
     <string name="SplashInterstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="AppOpen" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="app_open" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="app_open_real" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
     <string name="native_ad" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
     <string name="banner_test_ad_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="native_test_ad_id" translatable="false">ca-app-pub-3940256099942544/2247696110</string>

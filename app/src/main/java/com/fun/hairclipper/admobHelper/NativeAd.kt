@@ -102,30 +102,22 @@ object NativeAd {
 
     private fun getShimmerByDesign(design: String): Int {
         return when (design) {
-            "1a" -> R.layout.native_1_placeholder
-//            "1b" -> R.layout.native_1_placeholder
-//            "2a" -> R.layout.native_2_placeholder
-//            "2b" -> R.layout.native_2_placeholder
-//            "3a" -> R.layout.native_3_placeholder
-//            "3b" -> R.layout.native_3_placeholder
-//            "6a" -> R.layout.native_6_placeholder
-//            "6b" -> R.layout.native_6_placeholder
-//            "7a" -> R.layout.native_7_placeholder
+            "1" -> R.layout.native_1_placeholder
+            "2" -> R.layout.native_2_placeholder
+            "3" -> R.layout.native_3_placeholder
+            "6" -> R.layout.native_6_placeholder
+            "7" -> R.layout.native_7_placeholder
             else -> R.layout.native_1_placeholder
         }
     }
 
     private fun getAdLayoutByDesign(design: String): Int {
         return when (design) {
-            "1a" -> R.layout.native_1a
-//            "1b" -> R.layout.native_1b
-//            "2a" -> R.layout.native_2a
-//            "2b" -> R.layout.native_2b
-//            "3a" -> R.layout.native_3a
-//            "3b" -> R.layout.native_3b
-//            "6a" -> R.layout.native_6a
-//            "6b" -> R.layout.native_6b
-//            "7a" -> R.layout.native_7a
+            "1" -> R.layout.native_1a
+            "2" -> R.layout.native_2
+            "3" -> R.layout.native_3
+            "6" -> R.layout.native_6
+            "7" -> R.layout.native_7
             else -> R.layout.native_1a
         }
     }

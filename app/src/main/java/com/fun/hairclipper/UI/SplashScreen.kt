@@ -14,6 +14,8 @@ import androidx.core.graphics.drawable.toDrawable
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.InterstitialHomeActivity
+import com.`fun`.hairclipper.admobHelper.MyApplication
 import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.SplashscreenBinding
@@ -96,6 +98,13 @@ class SplashScreen : BaseClass() {
 
         val allOkay = paymentSubscription.isPurchased.not() && internetConnection(this)
         RemoteConfig.getRemoteConfig().fetchAndActivate().addOnCompleteListener {
+            val adID = if (AdConstants.TEST_ADS) getString(R.string.Interstitial)
+            else RemoteConfig.getString(RemoteConfig.HOME_INTERSTITIAL_AD_ID)
+            if (internetConnection(this) && RemoteConfig.getBoolean(RemoteConfig.ENABLE_HOME_INTERSTITIAL_AD)
+            ) {
+                InterstitialHomeActivity.loadInterstitialAdHome(this, adID.trim(), null)
+                MyApplication.resetInterstitialHomeTimeCap()
+            }
             if (paymentSubscription.isPurchased.not() && internetConnection(this)
                 && RemoteConfig.getBoolean(RemoteConfig.ENABLE_FULL_SCREEN_NATIVE_AD)
             ) {
@@ -107,7 +116,7 @@ class SplashScreen : BaseClass() {
         if (allOkay) {
             loadSplashAd()
         }
-        binding.pbSplash.setMax(time.toInt())
+        binding.pbSplash.max = time.toInt()
         handlerProgress.post(object : Runnable {
             override fun run() {
                 val progress = if (adLoaded) time.toInt() else binding.pbSplash.progress + 40

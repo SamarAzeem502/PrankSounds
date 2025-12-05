@@ -17,21 +17,58 @@ object RemoteConfig {
     const val SPLASH_INTERSTITIAL_AD_ID = "splash_interstitial_ad_id"
     const val ENABLE_SPLASH_INTERSTITIAL_AD = "enable_splash_interstitial_ad"
 
+
+    // Full Screen Native Ad
     const val ENABLE_FULL_SCREEN_NATIVE_AD = "enable_full_screen_native_ad"
     const val FULL_SCREEN_NATIVE_AD_ID = "full_screen_native_ad_id"
 
+    //Trimmer Interstitial
+    const val TRIMMER_INTER_CAP_CLICKS = "trimmer_inter_cap_clicks"
+    const val ENABLE_TRIMMER_INTERSTITIAL_AD = "enable_trimmer_interstitial_ad"
+    const val TRIMMER_INTERSTITIAL_AD_ID = "trimmer_interstitial_ad_id"
+    const val TRIMMER_INTER_CAP_TYPE = "trimmer_inter_cap_type"
+    const val TRIMMER_INTER_LOADER_TIME = "trimmer_inter_loader_time"
+    const val TRIMMER_INTER_CAP_TIME = "trimmer_inter_cap_time"
 
+    //Home Interstitial
+    const val HOME_INTER_CAP_CLICKS = "home_inter_cap_clicks"
+    const val ENABLE_HOME_INTERSTITIAL_AD = "enable_home_interstitial_ad"
+    const val HOME_INTERSTITIAL_AD_ID = "home_interstitial_ad_id"
+    const val HOME_INTER_CAP_TYPE = "home_inter_cap_type"
+    const val HOME_INTER_LOADER_TIME = "home_inter_loader_time"
+    const val HOME_INTER_CAP_TIME = "home_inter_cap_time"
 
+    //Fart Interstitial
+    const val FART_INTER_CAP_CLICKS = "fart_inter_cap_clicks"
+    const val ENABLE_FART_INTERSTITIAL_AD = "enable_fart_interstitial_ad"
+    const val FART_INTERSTITIAL_AD_ID = "fart_interstitial_ad_id"
+    const val FART_INTER_CAP_TYPE = "fart_inter_cap_type"
+    const val FART_INTER_LOADER_TIME = "fart_inter_loader_time"
+    const val FART_INTER_CAP_TIME = "fart_inter_cap_time"
 
-    // Interstitial Ad
-    const val APP_INTER_CAP_CLICKS = "app_inter_cap_clicks"
-    const val ENABLE_APP_INTERSTITIAL_AD = "enable_app_interstitial_ad"
-    const val ENABLE_FIX_INTERSTITIAL_AD = "enable_fix_interstitial_ad"
-    const val FIX_INTERSTITIAL_AD_ID = "fix_interstitial_ad_id"
-    const val APP_INTER_CAP_TYPE = "app_inter_cap_type"
-    const val APP_INTER_LOADER_TIME = "app_inter_loader_time"
-    const val APP_INTERSTITIAL_AD_ID = "app_interstitial_ad_id"
-    const val APP_INTER_CAP_TIME = "app_inter_cap_time"
+    //Vehicle Interstitial
+    const val VEHICLE_INTER_CAP_CLICKS = "vehicle_inter_cap_clicks"
+    const val ENABLE_VEHICLE_INTERSTITIAL_AD = "enable_vehicle_interstitial_ad"
+    const val VEHICLE_INTERSTITIAL_AD_ID = "vehicle_interstitial_ad_id"
+    const val VEHICLE_INTER_CAP_TYPE = "vehicle_inter_cap_type"
+    const val VEHICLE_INTER_LOADER_TIME = "vehicle_inter_loader_time"
+    const val VEHICLE_INTER_CAP_TIME = "vehicle_inter_cap_time"
+
+    //Stunt Gun Interstitial
+    const val STUNT_GUN_INTER_CAP_CLICKS = "stunt_gun_inter_cap_clicks"
+    const val ENABLE_STUNT_GUN_INTERSTITIAL_AD = "enable_stunt_gun_interstitial_ad"
+    const val STUNT_GUN_INTERSTITIAL_AD_ID = "stunt_gun_interstitial_ad_id"
+    const val STUNT_GUN_INTER_CAP_TYPE = "stunt_gun_inter_cap_type"
+    const val STUNT_GUN_INTER_LOADER_TIME = "stunt_gun_inter_loader_time"
+    const val STUNT_GUN_INTER_CAP_TIME = "stunt_gun_inter_cap_time"
+
+    //Halloween Interstitial
+    const val HALLOWEEN_INTER_CAP_TIME = "halloween_inter_cap_time"
+    const val HALLOWEEN_INTER_CAP_TYPE = "halloween_inter_cap_type"
+    const val HALLOWEEN_INTER_CAP_CLICKS = "halloween_inter_cap_clicks"
+    const val HALLOWEEN_INTER_LOADER_TIME = "halloween_inter_loader_time"
+    const val HALLOWEEN_INTERSTITIAL_AD_ID = "halloween_interstitial_ad_id"
+    const val ENABLE_HALLOWEEN_INTERSTITIAL_AD = "enable_halloween_interstitial_ad"
 
     // Language Selection
     const val LANGUAGE_NATIVE_AD_ID = "language_native_ad_id"
@@ -40,50 +77,17 @@ object RemoteConfig {
     const val LANGUAGE_NATIVE_BUTTON_COLOR = "language_native_button_color"
     const val LANGUAGE_NATIVE_BUTTON_CORNERS = "language_native_button_corners"
     const val LANGUAGE_NATIVE_BUTTON_TEXT_COLOR = "language_native_button_text_color"
-    const val LANGUAGE_BANNER_AD_ID = "language_banner_ad_id"
-    const val ENABLE_LANGUAGE_BANNER = "enable_language_banner"
-
-    //Activate Activity
-    const val ACTIVATE_NATIVE_AD_ID = "activate_native_ad_id"
-    const val ACTIVATE_NATIVE_AD_TYPE = "activate_native_ad_type"
-    const val ENABLE_ACTIVATE_NATIVE_AD = "enable_activate_native_ad"
-    const val ACTIVATE_NATIVE_BUTTON_COLOR = "activate_native_button_color"
-    const val ACTIVATE_NATIVE_BUTTON_CORNERS = "activate_native_button_corners"
-    const val ACTIVATE_NATIVE_BUTTON_TEXT_COLOR = "activate_native_button_text_color"
-
-    // Intro Screen
-    const val INTRO_AD_TYPE = "intro_ad_type"
-    const val INTRO_NATIVE_AD_ID = "intro_native_ad_id"
-    const val INTRO_NATIVE_AD_TYPE = "intro_native_ad_type"
-    const val ENABLE_INTRO_NATIVE_AD = "enable_intro_native_ad"
-    const val INTRO_NATIVE_BUTTON_COLOR = "intro_native_button_color"
-    const val INTRO_NATIVE_BUTTON_CORNERS = "intro_native_button_corners"
-    const val INTRO_NATIVE_BUTTON_TEXT_COLOR = "intro_native_button_text_color"
-    const val INTRO_FULL_SCREEN_NATIVE_AD_ID = "intro_full_screen_native_ad_id"
-    const val ENABLE_FULL_SCREEN_INTRO_NATIVE_AD = "enable_full_screen_intro_native_ad"
 
     // Main Activity
     const val MAIN_NATIVE_AD_ID = "main_native_ad_id"
     const val MAIN_NATIVE_AD_TYPE = "main_native_ad_type"
     const val ENABLE_MAIN_NATIVE_AD = "enable_main_native_ad"
-    const val MAIN_NATIVE_AD_LOCATION = "main_native_ad_location"
-    const val MAIN_RECYCLER_VIEW_TYPE = "main_recycler_view_type"
     const val MAIN_NATIVE_BUTTON_COLOR = "main_native_button_color"
     const val MAIN_NATIVE_BUTTON_CORNERS = "main_native_button_corners"
     const val MAIN_NATIVE_BUTTON_TEXT_COLOR = "main_native_button_text_color"
 
-    // Sound Activity
-    const val SOUND_NATIVE_AD_ID = "sound_native_ad_id"
-    const val SOUND_NATIVE_AD_TYPE = "sound_native_ad_type"
-    const val ENABLE_SOUND_NATIVE_AD = "enable_sound_native_ad"
-    const val SOUND_NATIVE_AD_LOCATION = "sound_native_ad_location"
-    const val SOUND_NATIVE_BUTTON_COLOR = "sound_native_button_color"
-    const val SOUND_NATIVE_BUTTON_CORNERS = "sound_native_button_corners"
-    const val SOUND_NATIVE_BUTTON_TEXT_COLOR = "sound_native_button_text_color"
 
     // Exit Native Ad
-    const val EXIT_BANNER_AD_ID = "exit_banner_ad_id"
-    const val ENABLE_EXIT_BANNER_AD = "enable_exit_banner_ad"
     const val EXIT_NATIVE_AD_ID = "exit_native_ad_id"
     const val EXIT_NATIVE_AD_TYPE = "exit_native_ad_type"
     const val ENABLE_EXIT_NATIVE_AD = "enable_exit_native_ad"
@@ -91,43 +95,97 @@ object RemoteConfig {
     const val EXIT_NATIVE_BUTTON_ROUND = "exit_native_button_round"
     const val EXIT_NATIVE_BUTTON_TEXT_COLOR = "exit_native_button_text_color"
 
-    // HTU Native Ad
-    const val HTU_NATIVE_AD_ID = "htu_native_ad_id"
-    const val HTU_NATIVE_AD_TYPE = "htu_native_ad_type"
-    const val ENABLE_HTU_NATIVE_AD = "enable_htu_native_ad"
-    const val HTU_NATIVE_BUTTON_COLOR = "htu_native_button_color"
-    const val HTU_NATIVE_BUTTON_ROUND = "htu_native_button_round"
-    const val HTU_NATIVE_BUTTON_TEXT_COLOR = "htu_native_button_text_color"
 
-    // Main Activity Banner
-    const val MAIN_BANNER_AD_ID = "main_banner_ad_id"
-    const val ENABLE_MAIN_BANNER_AD = "enable_main_banner_ad"
-    const val MAIN_BANNER_MAKE_COLLAPSIBLE = "main_banner_make_collapsible"
+    //MACHINE1 Activity Banner
+    const val MACHINE1_BANNER_AD_ID = "machine1_banner_ad_id"
+    const val ENABLE_MACHINE1_BANNER_AD = "enable_machine1_banner_ad"
+    const val MACHINE1_BANNER_MAKE_COLLAPSIBLE = "machine1_banner_make_collapsible"
 
-    // Settings Activity Banner
-    const val SETTINGS_BANNER_AD_ID = "settings_banner_ad_id"
-    const val ENABLE_SETTINGS_BANNER_AD = "enable_settings_banner_ad"
-    const val SETTINGS_BANNER_MAKE_COLLAPSIBLE = "settings_banner_make_collapsible"
+    //MACHINE2 Activity Banner
+    const val MACHINE2_BANNER_AD_ID = "machine2_banner_ad_id"
+    const val ENABLE_MACHINE2_BANNER_AD = "enable_machine2_banner_ad"
+    const val MACHINE2_BANNER_MAKE_COLLAPSIBLE = "machine2_banner_make_collapsible"
 
-    // Sounds Activity Banner
-    const val SOUND_BANNER_AD_ID = "sound_banner_ad_id"
-    const val ENABLE_SOUND_BANNER_AD = "enable_sound_banner_ad"
-    const val SOUND_BANNER_MAKE_COLLAPSIBLE = "sound_banner_make_collapsible"
+    //MACHINE3 Activity Banner
+    const val MACHINE3_BANNER_AD_ID = "machine3_banner_ad_id"
+    const val ENABLE_MACHINE3_BANNER_AD = "enable_machine3_banner_ad"
+    const val MACHINE3_BANNER_MAKE_COLLAPSIBLE = "machine3_banner_make_collapsible"
 
-    // Settings Activity
-    const val SETTING_NATIVE_AD_ID = "setting_native_ad_id"
-    const val SETTING_NATIVE_AD_TYPE = "setting_native_ad_type"
-    const val ENABLE_SETTING_NATIVE_AD = "enable_setting_native_ad"
-    const val SETTING_NATIVE_BUTTON_COLOR = "setting_native_button_color"
-    const val SETTING_NATIVE_BUTTON_CORNERS = "setting_native_button_corners"
-    const val SETTING_NATIVE_BUTTON_TEXT_COLOR = "setting_native_button_text_color"
+    //MACHINE4 Activity Banner
+    const val MACHINE4_BANNER_AD_ID = "machine4_banner_ad_id"
+    const val ENABLE_MACHINE4_BANNER_AD = "enable_machine4_banner_ad"
+    const val MACHINE4_BANNER_MAKE_COLLAPSIBLE = "machine4_banner_make_collapsible"
 
-    // Premium Activity
-    const val PRO_INTERSTITIAL_AD_ID = "pro_interstitial_ad_id"
-    const val ENABLE_PRO_INTERSTITIAL_AD = "enable_pro_interstitial_ad"
+    //MACHINE5 Activity
+    const val MACHINE5_BANNER_AD_ID = "machine5_banner_ad_id"
+    const val ENABLE_MACHINE5_BANNER_AD = "enable_machine5_banner_ad"
+    const val MACHINE5_BANNER_MAKE_COLLAPSIBLE = "machine5_banner_make_collapsible"
 
-    //Rewarded Ad
-    const val REWARDED_INTERSTITIAL_AD_ID = "rewarded_interstitial_ad_id"
+    //MACHINE6 Activity
+    const val MACHINE6_BANNER_AD_ID = "machine6_banner_ad_id"
+    const val ENABLE_MACHINE6_BANNER_AD = "enable_machine6_banner_ad"
+    const val MACHINE6_BANNER_MAKE_COLLAPSIBLE = "machine6_banner_make_collapsible"
+
+    //MACHINE7 Activity
+    const val MACHINE7_BANNER_AD_ID = "machine7_banner_ad_id"
+    const val ENABLE_MACHINE7_BANNER_AD = "enable_machine7_banner_ad"
+    const val MACHINE7_BANNER_MAKE_COLLAPSIBLE = "machine7_banner_make_collapsible"
+
+    //MACHINE8 Activity
+    const val MACHINE8_BANNER_AD_ID = "machine8_banner_ad_id"
+    const val ENABLE_MACHINE8_BANNER_AD = "enable_machine8_banner_ad"
+    const val MACHINE8_BANNER_MAKE_COLLAPSIBLE = "machine8_banner_make_collapsible"
+
+    //MACHINE9 Activity
+    const val MACHINE9_BANNER_AD_ID = "machine9_banner_ad_id"
+    const val ENABLE_MACHINE9_BANNER_AD = "enable_machine9_banner_ad"
+    const val MACHINE9_BANNER_MAKE_COLLAPSIBLE = "machine9_banner_make_collapsible"
+
+    //MACHINE10 Activity
+    const val MACHINE10_BANNER_AD_ID = "machine10_banner_ad_id"
+    const val ENABLE_MACHINE10_BANNER_AD = "enable_machine10_banner_ad"
+    const val MACHINE10_BANNER_MAKE_COLLAPSIBLE = "machine10_banner_make_collapsible"
+
+    //MACHINE11 Activity
+    const val MACHINE11_BANNER_AD_ID = "machine11_banner_ad_id"
+    const val ENABLE_MACHINE11_BANNER_AD = "enable_machine11_banner_ad"
+    const val MACHINE11_BANNER_MAKE_COLLAPSIBLE = "machine11_banner_make_collapsible"
+
+    //MACHINE12 Activity
+    const val MACHINE12_BANNER_AD_ID = "machine12_banner_ad_id"
+    const val ENABLE_MACHINE12_BANNER_AD = "enable_machine12_banner_ad"
+    const val MACHINE12_BANNER_MAKE_COLLAPSIBLE = "machine12_banner_make_collapsible"
+
+    //MACHINE13 Activity
+    const val MACHINE13_BANNER_AD_ID = "machine13_banner_ad_id"
+    const val ENABLE_MACHINE13_BANNER_AD = "enable_machine13_banner_ad"
+    const val MACHINE13_BANNER_MAKE_COLLAPSIBLE = "machine13_banner_make_collapsible"
+
+    //AIRHORN Activity
+    const val AIRHORN_BANNER_AD_ID = "airhorn_banner_ad_id"
+    const val ENABLE_AIRHORN_BANNER_AD = "enable_airhorn_banner_ad"
+    const val AIRHORN_BANNER_MAKE_COLLAPSIBLE = "airhorn_banner_make_collapsible"
+
+    //CHANGE_TRIMMER Activity
+    const val CHANGE_TRIMMER_BANNER_AD_ID = "change_trimmer_banner_ad_id"
+    const val ENABLE_CHANGE_TRIMMER_BANNER_AD = "enable_change_trimmer_banner_ad"
+    const val CHANGE_TRIMMER_BANNER_MAKE_COLLAPSIBLE = "change_trimmer_banner_make_collapsible"
+
+    //FART Activity
+    const val FART_BANNER_AD_ID = "fart_banner_ad_id"
+    const val ENABLE_FART_BANNER_AD = "enable_fart_banner_ad"
+    const val FART_BANNER_MAKE_COLLAPSIBLE = "fart_banner_make_collapsible"
+
+    //HALLOWEEN Activity
+    const val HALLOWEEN_BANNER_AD_ID = "halloween_banner_ad_id"
+    const val ENABLE_HALLOWEEN_BANNER_AD = "enable_halloween_banner_ad"
+    const val HALLOWEEN_BANNER_MAKE_COLLAPSIBLE = "halloween_banner_make_collapsible"
+
+    //STUNT GUN Activity
+    const val STUNT_GUN_BANNER_AD_ID = "stunt_gun_banner_ad_id"
+    const val ENABLE_STUNT_GUN_BANNER_AD = "enable_stunt_gun_banner_ad"
+    const val STUNT_GUN_BANNER_MAKE_COLLAPSIBLE = "stunt_gun_banner_make_collapsible"
+
 
     @SuppressLint("StaticFieldLeak")
     private var remoteConfig: FirebaseRemoteConfig? = null
@@ -140,7 +198,7 @@ object RemoteConfig {
                 .setMinimumFetchIntervalInSeconds(5)
                 .build()
             remoteConfig?.setConfigSettingsAsync(configSettings)
-//            remoteConfig?.setDefaultsAsync(R.xml.remote_config_defaults)
+            remoteConfig?.setDefaultsAsync(R.xml.remote_config_defaults)
             remoteConfig?.addOnConfigUpdateListener(object : ConfigUpdateListener {
                 override fun onUpdate(configUpdate: ConfigUpdate) {
                     remoteConfig?.activate()

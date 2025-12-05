@@ -1,188 +1,193 @@
-package com.fun.hairclipper.admobHelper;
+package com.`fun`.hairclipper.admobHelper
 
-import static androidx.lifecycle.Lifecycle.Event.ON_START;
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.UI.PremiumScreen
+import com.`fun`.hairclipper.UI.SplashScreen
+import com.`fun`.hairclipper.admobHelper.AdConstants.SHOWING_INTER_AD
+import com.`fun`.hairclipper.admobHelper.AdConstants.appOpenToInterstitialCap
+import com.`fun`.hairclipper.admobHelper.AdConstants.appOpenToInterstitialCapComplete
+import com.`fun`.hairclipper.admobHelper.AdConstants.interstitialToAppOpenCapComplete
+import com.`fun`.hairclipper.admobHelper.AdConstants.rewardedToAppOpenComplete
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.appopen.AppOpenAd
+import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
+import java.util.Date
 
-import android.app.Activity;
-import android.app.Application;
-import android.os.Bundle;
-import android.util.Log;
+class AppOpenManager(private val myApplication: MyApplication) : ActivityLifecycleCallbacks,
+    DefaultLifecycleObserver {
+    private var loadTime: Long = 0
+    private var currentActivity: Activity? = null
+    private var isAdLoading = false
 
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
-import androidx.lifecycle.ProcessLifecycleOwner;
+    //    private lateinit var paymentSubscription: PaymentSubscription
+    private var loadCallback: AppOpenAdLoadCallback? = null
 
-import com.fun.hairclipper.R;
-import com.fun.hairclipper.UI.SplashScreen;
-import com.fun.hairclipper.helpers.PaymentSubscription;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.appopen.AppOpenAd;
+    init {
+        try {
+            Log.d(LOG_TAG, ": AppOpenManager $myApplication ")
+            myApplication.registerActivityLifecycleCallbacks(this)
+            ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+//            paymentSubscription = myApplication.paymentSubscription
 
-import java.util.Date;
-
-/**
- * Prefetches App Open Ads.
- */
-public class AppOpenManager implements LifecycleObserver, Application.ActivityLifecycleCallbacks {
-    public static boolean isShowingAd = false;
-    private Activity currentActivity;
-    private static final String LOG_TAG = "AppOpenManager";
-
-
-    private AppOpenAd appOpenAd = null;
-    PaymentSubscription inAppPurchase;
-    private long loadTime = 0;
-    private AppOpenAd.AppOpenAdLoadCallback loadCallback;
-
-    private final MyApplication myApplication;
-
-    /**
-     * Constructor
-     */
-    public AppOpenManager(MyApplication myApplication) {
-        this.myApplication = myApplication;
-        this.myApplication.registerActivityLifecycleCallbacks(this);
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-        inAppPurchase = myApplication.getPaymentSubscription();
-    }
-
-    @OnLifecycleEvent(ON_START)
-    public void onStart() {
-        //Toast.makeText(myApplication,"On Start",Toast.LENGTH_SHORT).show();
-        if (!inAppPurchase.isPurchased() && !(currentActivity instanceof SplashScreen)) {
-            showAdIfAvailable();
+            Log.d(LOG_TAG, ":$myApplication ")
+        } catch (e: Exception) {
+            Log.e(LOG_TAG, ": ", e)
         }
-        Log.d(LOG_TAG, "onStart");
     }
 
-    public void showAdIfAvailable() {
+
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        if (currentActivity !is SplashScreen && currentActivity !is PremiumScreen) {
+            showAdIfAvailable()
+        } else {
+            fetchAd()
+        }
+        Log.d(LOG_TAG, "onStart")
+    }
+
+
+    fun fetchAd() {
+        try {// Have unused ad, no need to fetch another.
+
+            if (isAdAvailable() || isAdLoading || myApplication.paymentSubscription.isPurchased
+                || !internetConnection(myApplication)
+            ) {
+                return
+            }
+            loadCallback = object : AppOpenAdLoadCallback() {
+                override fun onAdLoaded(appOpenAd: AppOpenAd) {
+                    Log.d(LOG_TAG, "onAdLoaded: ")
+                    analytics.logEvent("app_open_loaded", null)
+                    isAdLoading = false
+                    Companion.appOpenAd = appOpenAd
+                    loadTime = Date().time
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+                    Log.d(LOG_TAG, "onAdFailedToLoad: ")
+                    analytics.logEvent(
+                        "app_open_fail_load", null
+                    )
+                    isAdLoading = false
+                }
+            }
+            val request = AdRequest.Builder().build()
+            val s: String = if (AdConstants.TEST_ADS) {
+                myApplication.getString(R.string.app_open)
+            } else {
+                myApplication.getString(R.string.app_open_real)
+            }
+            isAdLoading = true
+            AppOpenAd.load(myApplication, s.trim(), request, loadCallback as AppOpenAdLoadCallback)
+            /* RemoteConfig.getRemoteConfig().fetchAndActivate().addOnCompleteListener(task -> {
+                Log.d(LOG_TAG, "fetchAd: task: " + task.isSuccessful());
+                if (RemoteConfig.getBoolean(RemoteConfig.ENABLE_APP_OPEN_AD)) {
+                    AppOpenAd.load(myApplication, RemoteConfig.getString(RemoteConfig.APP_OPEN_AD), request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
+                }
+            });*/
+        } catch (e: Exception) {
+            Log.e(LOG_TAG, "fetchAd: ", e)
+        }
+    }
+
+    private fun showAdIfAvailable() {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
-        if (!isShowingAd && isAdAvailable()) {
+        if (!AdConstants.SHOWING_APP_OPEN_AD
+            && isAdAvailable()
+            && rewardedToAppOpenComplete
+            && appOpenToInterstitialCapComplete
+            && interstitialToAppOpenCapComplete
+            && !SHOWING_INTER_AD
+        ) {
+            Log.d(LOG_TAG, "Will show ad.")
+            appOpenAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    AdConstants.SHOWING_APP_OPEN_AD = false
+                    appOpenToInterstitialCap.start()
+                    analytics.logEvent(
+                        "appOpenAd_dismiss",
+                        null
+                    )
+                    Log.d(LOG_TAG, "onAdDismissedFullScreenContent: ")
+                }
 
-            Log.d(LOG_TAG, "Will show ad.");
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    Log.d(LOG_TAG, "onAdFailedToShowFullScreenContent: ")
+                    analytics.logEvent("appOpenAd_failed_to_show", null)
+                    AdConstants.SHOWING_APP_OPEN_AD = false
+                    appOpenAd = null
+                    fetchAd()
+                }
 
-            FullScreenContentCallback fullScreenContentCallback =
-                    new FullScreenContentCallback() {
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            // Set the reference to null so isAdAvailable() returns false.
-                            AppOpenManager.this.appOpenAd = null;
-                            isShowingAd = false;
-                            fetchAd();
-                        }
+                override fun onAdShowedFullScreenContent() {
+                    Log.d(LOG_TAG, "onAdShowedFullScreenContent: ")
+                    analytics.logEvent("appOpenAd_showed", null)
+                    appOpenToInterstitialCapComplete = false
+                    AdConstants.SHOWING_APP_OPEN_AD = true
+                    appOpenAd = null
+                    fetchAd()
+                }
 
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(AdError adError) {
-                            fetchAd();
-                        }
+                override fun onAdClicked() {
+                    super.onAdClicked()
+                    analytics.logEvent("appOpenAd_clicked", null)
+                }
 
-                        @Override
-                        public void onAdShowedFullScreenContent() {
-                            isShowingAd = true;
-                        }
-                    };
-
-            appOpenAd.setFullScreenContentCallback(fullScreenContentCallback);
-            appOpenAd.show(currentActivity);
-
+                override fun onAdImpression() {
+                    super.onAdImpression()
+                    analytics.logEvent("appOpenAd_impression", null)
+                }
+            }
+            appOpenAd!!.show(currentActivity!!)
         } else {
-            Log.d(LOG_TAG, "Can not show ad.");
-            fetchAd();
+            Log.d(LOG_TAG, "Can not show ad.")
+            fetchAd()
         }
     }
 
-    /**
-     * Request an ad
-     */
-    public void fetchAd() {
-        // We will implement this below.
-        // Have unused ad, no need to fetch another.
-        if (isAdAvailable()) {
-            return;
-        }
-        loadCallback =
-                new AppOpenAd.AppOpenAdLoadCallback() {
-                    /**
-                     * Called when an app open ad has loaded.
-                     *
-                     * @param ad the loaded app open ad.
-                     */
-                    @Override
-                    public void onAdLoaded(AppOpenAd ad) {
-                        AppOpenManager.this.appOpenAd = ad;
-                        AppOpenManager.this.loadTime = (new Date()).getTime();
-                    }
-
-                    /**
-                     * Called when an app open ad has failed to load.
-                     *
-                     * @param loadAdError the error.
-                     */
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError loadAdError) {
-                        // Handle the error.
-                        // Toast.makeText(myApplication,"On failed",Toast.LENGTH_SHORT).show();
-
-                    }
-
-                };
-        AdRequest request = getAdRequest();
-        AppOpenAd.load(
-                myApplication, currentActivity.getString(R.string.AppOpen).trim(), request,
-                loadCallback);
+    private fun isAdAvailable(): Boolean {
+        return appOpenAd != null && wasLoadTimeLessThan4HoursAgo()
     }
 
-    private boolean wasLoadTimeLessThanNHoursAgo(long numHours) {
-        long dateDifference = (new Date()).getTime() - this.loadTime;
-        long numMilliSecondsPerHour = 3600000;
-        return (dateDifference < (numMilliSecondsPerHour * numHours));
+    private fun wasLoadTimeLessThan4HoursAgo(): Boolean {
+        val dateDifference = Date().time - this.loadTime
+        val numMilliSecondsPerHour = 3600000
+        return dateDifference < numMilliSecondsPerHour * 4
     }
 
-    /**
-     * Creates and returns ad request.
-     */
-    private AdRequest getAdRequest() {
-        return new AdRequest.Builder().build();
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+    override fun onActivityStarted(activity: Activity) {
+        currentActivity = activity
     }
 
-    /**
-     * Utility method that checks if ad exists and can be shown.
-     */
-    public boolean isAdAvailable() {
-        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4);
+    override fun onActivityResumed(activity: Activity) {
+        currentActivity = activity
     }
 
-    @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+    override fun onActivityPaused(activity: Activity) {}
+    override fun onActivityStopped(activity: Activity) {}
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+    override fun onActivityDestroyed(activity: Activity) {
+        Log.d("test", "onActivityDestroyed: ${activity.localClassName} ")
+        currentActivity = null
     }
 
-    @Override
-    public void onActivityStarted(Activity activity) {
-        currentActivity = activity;
-    }
-
-    @Override
-    public void onActivityResumed(Activity activity) {
-        currentActivity = activity;
-    }
-
-    @Override
-    public void onActivityStopped(Activity activity) {
-    }
-
-    @Override
-    public void onActivityPaused(Activity activity) {
-    }
-
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-    }
-
-    @Override
-    public void onActivityDestroyed(Activity activity) {
-        currentActivity = null;
+    companion object {
+        var appOpenAd: AppOpenAd? = null
+        private const val LOG_TAG = "AppOpenManager"
     }
 }

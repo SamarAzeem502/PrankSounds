@@ -46,27 +46,27 @@ android {
 //    listLang = ["en", "ar", "fr", "de", "id", "it", "ms", "fa", "pt", "ru", "es", "tr", "zh"]
 //}
 dependencies {
-    implementation "com.google.android.gms:play-services-ads:24.7.0"
-    implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "com.google.android.material:material:1.11.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "com.google.android.gms:play-services-ads:24.8.0"
+    implementation "androidx.appcompat:appcompat:1.7.1"
+    implementation "com.google.android.material:material:1.13.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.2.1"
     implementation "androidx.lifecycle:lifecycle-process:2.10.0"
-    implementation "com.intuit.ssp:ssp-android:1.0.6"
-    implementation "com.intuit.sdp:sdp-android:1.1.0"
-    implementation "com.google.android.material:material:1.11.0"
+    implementation "com.intuit.ssp:ssp-android:1.1.1"
+    implementation "com.intuit.sdp:sdp-android:1.1.1"
+    implementation "com.google.android.material:material:1.13.0"
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-runtime:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.7.0"
-    implementation "com.airbnb.android:lottie:6.3.0"
+    implementation "androidx.lifecycle:lifecycle-runtime:2.10.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.10.0"
+    implementation "com.airbnb.android:lottie:6.7.1"
 
     testImplementation "junit:junit:4.13.2"
-    implementation "com.google.guava:guava:27.0.1-jre"
+    implementation "com.google.guava:guava:33.5.0-jre"
 
-    androidTestImplementation "androidx.test.ext:junit:1.1.5"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
-    implementation "com.android.billingclient:billing-ktx:6.2.1"
-    //Kotlin
+    androidTestImplementation "androidx.test.ext:junit:1.3.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.7.0"
+    implementation "com.android.billingclient:billing-ktx:8.1.0"
+    //Kotlin com.hairclipper.premium sp_pro_app
     implementation "androidx.core:core-ktx:1.13.0"
 
     implementation"com.github.ome450901:SimpleRatingBar:1.5.1"

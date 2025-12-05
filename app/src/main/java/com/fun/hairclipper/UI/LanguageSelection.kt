@@ -1,23 +1,22 @@
 package com.`fun`.hairclipper.UI
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.edit
-import com.`fun`.hairclipper.helpers.Constants
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.adaptor.LanguageAdapter
-import com.`fun`.hairclipper.databinding.ActivityLanguageSelectionBinding
-import com.`fun`.hairclipper.helpers.AdsManager
-import com.`fun`.hairclipper.helpers.LocaleNow
+import com.`fun`.hairclipper.admobHelper.AdConstants
+import com.`fun`.hairclipper.admobHelper.InterstitialFartActivity
+import com.`fun`.hairclipper.admobHelper.InterstitialHalloweenActivity
+import com.`fun`.hairclipper.admobHelper.InterstitialStuntActivity
+import com.`fun`.hairclipper.admobHelper.InterstitialVehicleActivity
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdView
+import com.`fun`.hairclipper.databinding.ActivityLanguageSelectionBinding
+import com.`fun`.hairclipper.helpers.Constants
+import com.`fun`.hairclipper.helpers.LocaleNow
 
 class LanguageSelection : BaseClass() {
     private val binding by lazy { ActivityLanguageSelectionBinding.inflate(layoutInflater) }
@@ -49,18 +48,42 @@ class LanguageSelection : BaseClass() {
         }
 
         languageNativeAd()
+
+        val adID = if (AdConstants.TEST_ADS) getString(R.string.Interstitial)
+        else RemoteConfig.getString(RemoteConfig.STUNT_GUN_INTERSTITIAL_AD_ID)
+        if (internetConnection(this) && RemoteConfig.getBoolean(RemoteConfig.ENABLE_STUNT_GUN_INTERSTITIAL_AD)
+        ) {
+            InterstitialStuntActivity.loadInterstitialAdStunt(this, adID.trim(), null)
+            MyApplication.resetInterstitialStuntTimeCap()
+        }
+
+        val adIDHalloween = if (AdConstants.TEST_ADS) getString(R.string.Interstitial)
+        else RemoteConfig.getString(RemoteConfig.HALLOWEEN_INTERSTITIAL_AD_ID)
+        if (internetConnection(this) && RemoteConfig.getBoolean(RemoteConfig.ENABLE_HALLOWEEN_INTERSTITIAL_AD)
+        ) {
+            InterstitialHalloweenActivity.loadInterstitialAdHalloween(this, adIDHalloween.trim(), null)
+            MyApplication.resetInterstitialHalloweenTimeCap()
+        }
     }
 
     private fun languageNativeAd() {
-        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
+        val adId = if (AdConstants.TEST_ADS) {
+            RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_AD_ID)
+        } else {
+            getString(R.string.native_ad)
+        }
+        val adType = RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_AD_TYPE)
+        val adRound = RemoteConfig.getBoolean(RemoteConfig.LANGUAGE_NATIVE_BUTTON_CORNERS)
+        val adBtnColor = RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_BUTTON_COLOR)
+        val adBtnTextColor = RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_BUTTON_TEXT_COLOR)
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)
+            && RemoteConfig.getBoolean(RemoteConfig.ENABLE_LANGUAGE_NATIVE_AD)
+        ) {
             com.`fun`.hairclipper.admobHelper.NativeAd.load(
                 binding.frameLangNative,
-                getString(R.string.native_ad),
-                "","","",
-                false,
-                ""
-            ){}
-        }else{
+                adId.trim(), adType, adBtnColor, adBtnTextColor, adRound, "language"
+            ) {}
+        } else {
             binding.frameLangNative.visibility = View.GONE
         }
     }

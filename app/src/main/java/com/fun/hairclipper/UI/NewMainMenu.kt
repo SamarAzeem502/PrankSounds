@@ -1,117 +1,63 @@
 package com.`fun`.hairclipper.UI
 
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.GravityCompat
 import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.AdConstants
+import com.`fun`.hairclipper.admobHelper.FullScreenAdListener
+import com.`fun`.hairclipper.admobHelper.InterstitialTrimmerActivity
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.analytics
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityNewMainMenuBinding
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 class NewMainMenu : BaseClass() {
-    private var mInterstitialAd: InterstitialAd? = null
     private var backDialog: AlertDialog? = null
     private val binding by lazy { ActivityNewMainMenuBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         analytics.logEvent("main_menu_activity", null)
-        loadInterstitial()
         loadMainNativeAd()
-
+        val adID = if (AdConstants.TEST_ADS) getString(R.string.Interstitial)
+        else RemoteConfig.getString(RemoteConfig.TRIMMER_INTERSTITIAL_AD_ID)
+        if (internetConnection(this) && RemoteConfig.getBoolean(RemoteConfig.ENABLE_TRIMMER_INTERSTITIAL_AD)
+        ) {
+            InterstitialTrimmerActivity.loadInterstitialAdTrimmer(this, adID.trim(), null)
+            MyApplication.resetInterstitialTrimmerTimeCap()
+        }
         binding.more.setOnClickListener {
             analytics.logEvent("btn_more", null)
             drawerClick()
         }
         binding.fartCard.setOnClickListener {
             analytics.logEvent("btn_fart", null)
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.show(this@NewMainMenu)
-                mInterstitialAd!!.fullScreenContentCallback = object :
-                    FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        mInterstitialAd = null
-                        startActivity(Intent(this@NewMainMenu, FartActivity::class.java))
-                    }
-                }
-            } else {
-                startActivity(Intent(this@NewMainMenu, FartActivity::class.java))
-            }
+            showInterstitialAndNavigate(FartActivity::class.java, "btn_fart")
         }
         binding.halloweenCard.setOnClickListener {
             analytics.logEvent("btn_halloween", null)
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.show(this@NewMainMenu)
-                mInterstitialAd!!.fullScreenContentCallback = object :
-                    FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        mInterstitialAd = null
-                        startActivity(Intent(this@NewMainMenu, HalloweenActivity::class.java))
-                    }
-                }
-            } else {
-                startActivity(Intent(this@NewMainMenu, HalloweenActivity::class.java))
-            }
+            showInterstitialAndNavigate(HalloweenActivity::class.java, "btn_halloween")
         }
         binding.airHornCard.setOnClickListener {
             analytics.logEvent("btn_air_horn", null)
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.show(this@NewMainMenu)
-                mInterstitialAd!!.fullScreenContentCallback = object :
-                    FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        mInterstitialAd = null
-                        startActivity(Intent(this@NewMainMenu, AirHornActivity::class.java))
-                    }
-                }
-            } else {
-                startActivity(Intent(this@NewMainMenu, AirHornActivity::class.java))
-            }
+            showInterstitialAndNavigate(AirHornActivity::class.java, "btn_air_horn")
         }
         binding.stunGunCard.setOnClickListener {
             analytics.logEvent("btn_stun_gun", null)
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.show(this@NewMainMenu)
-                mInterstitialAd!!.fullScreenContentCallback = object :
-                    FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        mInterstitialAd = null
-                        startActivity(Intent(this@NewMainMenu, StunGunActivity::class.java))
-                    }
-                }
-            } else {
-                startActivity(Intent(this@NewMainMenu, StunGunActivity::class.java))
-            }
+            showInterstitialAndNavigate(StunGunActivity::class.java, "btn_stun_gun")
         }
         binding.trimmerMenu.setOnClickListener {
             analytics.logEvent("btn_trimmer", null)
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.show(this@NewMainMenu)
-                mInterstitialAd!!.fullScreenContentCallback = object :
-                    FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        mInterstitialAd = null
-                        startActivity(Intent(this@NewMainMenu, ChangeTrimmerActivity::class.java))
-                    }
-                }
-            } else {
-                startActivity(Intent(this@NewMainMenu, ChangeTrimmerActivity::class.java))
-            }
+            showInterstitialAndNavigate(ChangeTrimmerActivity::class.java, "btn_trimmer")
         }
         binding.includeLayout.layPrivacy.setOnClickListener {
             analytics.logEvent("btn_privacy", null)
@@ -153,6 +99,15 @@ class NewMainMenu : BaseClass() {
         }
     }
 
+    private fun showInterstitialAndNavigate(activity: Class<*>, fromActivity: String) {
+        MyApplication.showInterstitialAdHome(this, object : FullScreenAdListener() {
+            override fun gotoNext() {
+                super.gotoNext()
+                startActivity(Intent(this@NewMainMenu, activity))
+            }
+        }, fromActivity)
+    }
+
 
     override fun handleBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -186,10 +141,21 @@ class NewMainMenu : BaseClass() {
                 backDialog!!.dismiss()
             }
         }
-        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
+        val adId = if (AdConstants.TEST_ADS) {
+            RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_AD_ID)
+        } else {
+            getString(R.string.native_ad)
+        }
+        val adType = RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_AD_TYPE)
+        val adRound = RemoteConfig.getBoolean(RemoteConfig.EXIT_NATIVE_BUTTON_ROUND)
+        val adBtnColor = RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_BUTTON_COLOR)
+        val adBtnTextColor = RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_BUTTON_TEXT_COLOR)
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)
+            && RemoteConfig.getBoolean(RemoteConfig.ENABLE_EXIT_NATIVE_AD)
+        ) {
             com.`fun`.hairclipper.admobHelper.NativeAd.load(
                 bannerBack,
-                getString(R.string.native_ad), "", "", "", true, "back_dialog"
+                adId, adType, adBtnColor, adBtnTextColor, adRound, "back_dialog"
             ) {}
         } else {
             bannerBack.visibility = View.GONE
@@ -200,39 +166,26 @@ class NewMainMenu : BaseClass() {
         backDialog!!.show()
     }
 
-
     fun drawerClick() {
         binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
-    private fun loadInterstitial() {
-        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
-            val adRequest = AdRequest.Builder().build()
-            InterstitialAd.load(
-                this, getString(R.string.Interstitial), adRequest,
-                object : InterstitialAdLoadCallback() {
-                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        mInterstitialAd = interstitialAd
-                        Log.i(ContentValues.TAG, "onAdLoaded")
-                    }
-
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        // Handle the error
-                        Log.d(ContentValues.TAG, loadAdError.toString())
-                        mInterstitialAd = null
-                    }
-                })
-        }
-    }
-
     private fun loadMainNativeAd() {
-        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
+        val adId = if (AdConstants.TEST_ADS) {
+            RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_AD_ID)
+        } else {
+            getString(R.string.native_ad)
+        }
+        val adType = RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_AD_TYPE)
+        val adRound = RemoteConfig.getBoolean(RemoteConfig.MAIN_NATIVE_BUTTON_CORNERS)
+        val adBtnColor = RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_BUTTON_COLOR)
+        val adBtnTextColor = RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_BUTTON_TEXT_COLOR)
+        if (paymentSubscription.isPurchased.not() && internetConnection(this)
+            && RemoteConfig.getBoolean(RemoteConfig.ENABLE_MAIN_NATIVE_AD)
+        ) {
             com.`fun`.hairclipper.admobHelper.NativeAd.load(
                 binding.frameMainNative,
-                getString(R.string.native_ad),
-                "", "", "", true, "main"
+                adId, adType, adBtnColor, adBtnTextColor, adRound, "main_menu"
             ) {}
         } else {
             binding.frameMainNative.visibility = View.GONE

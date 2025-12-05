@@ -17,11 +17,12 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.airbnb.lottie.LottieAnimationView
 import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.FullScreenAdListener
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.interstitial.InterstitialAd
 
 class StunGunActivity : BaseClass() {
     var player: MediaPlayer? = null
@@ -33,125 +34,159 @@ class StunGunActivity : BaseClass() {
     var imageView: ImageView? = null
     var loopImageView: ImageView? = null
     private var frameLayout: FrameLayout? = null
-    private var adView: AdView? = null
-    private val mInterstitialAd: InterstitialAd? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stun_gun)
         volumeControlStream = AudioManager.STREAM_MUSIC
-        imageView = findViewById<ImageView>(R.id.imagehiorn)
-        loopImageView = findViewById<ImageView>(R.id.loopImage)
-        frameLayout = findViewById<FrameLayout>(R.id.adaptiveStun)
-        loadBanner()
+        imageView = findViewById(R.id.imagehiorn)
+        loopImageView = findViewById(R.id.loopImage)
+        frameLayout = findViewById(R.id.adaptiveStun)
+        loadBannerAd()
 
         initControls()
-        val splashscreeny: LottieAnimationView = findViewById<LottieAnimationView>(R.id.lott)
-        splashscreeny.animate()
+        val splashScreeny: LottieAnimationView = findViewById(R.id.lott)
+        splashScreeny.animate()
         val shake = AnimationUtils.loadAnimation(applicationContext, R.anim.shake)
         val home = findViewById<ImageView>(R.id.home_btn)
-        home.setOnClickListener { finish() }
+        home.setOnClickListener { handleBackPressed() }
         val loopButton = findViewById<Button>(R.id.loopButton)
         loopButton.setText(R.string.start_loop)
         loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
-        loopButton.setOnClickListener(View.OnClickListener { v: View? ->
+        loopButton.setOnClickListener {
             if (!loopStatus) {
-                loopImageView!!.setVisibility(View.VISIBLE)
+                loopImageView!!.visibility = View.VISIBLE
                 loopButton.setText(R.string.stop_loop)
                 loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stop, 0, 0, 0)
                 loopStatus = true
-                splashscreeny.setVisibility(View.VISIBLE)
-                if (soundSelect == "bike") {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun1)
-                } else if (soundSelect == "police") {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun2)
-                } else if (soundSelect == "ambulance") {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun3)
-                } else {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun4)
+                splashScreeny.visibility = View.VISIBLE
+                player = when (soundSelect) {
+                    "bike" -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun1)
+                    }
+
+                    "police" -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun2)
+                    }
+
+                    "ambulance" -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun3)
+                    }
+
+                    else -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun4)
+                    }
                 }
 
                 player!!.start()
                 player!!.isLooping = true
                 imageView!!.startAnimation(shake)
-                splashscreeny.playAnimation()
+                splashScreeny.playAnimation()
             } else {
-                loopImageView!!.setVisibility(View.GONE)
-                loopButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
-                loopButton.setText(R.string.start_loop)
-                loopStatus = false
-                player!!.stop()
-                player!!.release()
-                imageView!!.clearAnimation()
-                splashscreeny.pauseAnimation()
-                splashscreeny.setVisibility(View.GONE)
-            }
-        })
+                MyApplication.showInterstitialAdStunt(
+                    this@StunGunActivity,
+                    object : FullScreenAdListener() {
+                        override fun gotoNext() {
+                            super.gotoNext()
+                            loopImageView!!.visibility = View.GONE
+                            loopButton.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_loop,
+                                0,
+                                0,
+                                0
+                            )
+                            loopButton.setText(R.string.start_loop)
+                            loopStatus = false
+                            player!!.stop()
+                            player!!.release()
+                            imageView!!.clearAnimation()
+                            splashScreeny.pauseAnimation()
+                            splashScreeny.visibility = View.GONE
+                        }
+                    },
+                    "btn_stop_loop"
+                )
 
-        loopImageView!!.setOnClickListener(View.OnClickListener { v: View? ->
+            }
+        }
+
+        loopImageView!!.setOnClickListener {
             Toast.makeText(
                 this@StunGunActivity,
                 R.string.stop_loop_first,
                 Toast.LENGTH_SHORT
             ).show()
-        })
-        imageView!!.setOnTouchListener(View.OnTouchListener { v: View?, event: MotionEvent? ->
-            if (event?.getAction() == MotionEvent.ACTION_DOWN) {
-                splashscreeny.setVisibility(View.VISIBLE)
-                if (soundSelect == "bike") {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun1)
-                } else if (soundSelect == "police") {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun2)
-                } else if (soundSelect == "ambulance") {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun3)
-                } else {
-                    player = MediaPlayer.create(this@StunGunActivity, R.raw.stun4)
+        }
+        imageView!!.setOnTouchListener { _: View?, event: MotionEvent? ->
+            if (event?.action == MotionEvent.ACTION_DOWN) {
+                splashScreeny.visibility = View.VISIBLE
+                player = when (soundSelect) {
+                    "bike" -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun1)
+                    }
+
+                    "police" -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun2)
+                    }
+
+                    "ambulance" -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun3)
+                    }
+
+                    else -> {
+                        MediaPlayer.create(this@StunGunActivity, R.raw.stun4)
+                    }
                 }
 
                 player!!.start()
                 player!!.isLooping = true
                 imageView!!.startAnimation(shake)
-                splashscreeny.playAnimation()
-            } else if (event?.getAction() == MotionEvent.ACTION_UP) {
+                splashScreeny.playAnimation()
+            } else if (event?.action == MotionEvent.ACTION_UP) {
                 player!!.stop()
                 player!!.release()
                 imageView!!.clearAnimation()
-                splashscreeny.pauseAnimation()
-                splashscreeny.setVisibility(View.GONE)
+                splashScreeny.pauseAnimation()
+                splashScreeny.visibility = View.GONE
             }
             true
-        })
+        }
     }
 
     override fun handleBackPressed() {
-        if (loopStatus) {
-            cleanUpMediaPlayer()
-        }
-        super.handleBackPressed()
+        MyApplication.showInterstitialAdStunt(this, object : FullScreenAdListener() {
+            override fun gotoNext() {
+                super.gotoNext()
+                if (loopStatus) {
+                    cleanUpMediaPlayer()
+                }
+                finish()
+            }
+        }, "btn_back_stunt")
     }
 
     private fun initControls() {
         loopPlayer = MediaPlayer.create(this@StunGunActivity, R.raw.stun1)
 
-        val card1: CardView = findViewById<CardView>(R.id.sound1)
-        val card2: CardView = findViewById<CardView>(R.id.sound2)
-        val card3: CardView = findViewById<CardView>(R.id.sound3)
-        val card4: CardView = findViewById<CardView>(R.id.sound4)
+        val card1: CardView = findViewById(R.id.sound1)
+        val card2: CardView = findViewById(R.id.sound2)
+        val card3: CardView = findViewById(R.id.sound3)
+        val card4: CardView = findViewById(R.id.sound4)
 
-        val text1: TextView = findViewById<TextView>(R.id.text_sound1)
-        val text2: TextView = findViewById<TextView>(R.id.text_sound2)
-        val text3: TextView = findViewById<TextView>(R.id.text_sound3)
-        val text4: TextView = findViewById<TextView>(R.id.text_sound4)
+        val text1: TextView = findViewById(R.id.text_sound1)
+        val text2: TextView = findViewById(R.id.text_sound2)
+        val text3: TextView = findViewById(R.id.text_sound3)
+        val text4: TextView = findViewById(R.id.text_sound4)
 
         text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_down)
         imageView!!.setBackgroundResource(R.drawable.stun1)
         soundSelect = "bike"
-        card1.setOnClickListener(View.OnClickListener { v: View? ->
+        card1.setOnClickListener {
             if (!loopStatus) {
                 imageView!!.setBackgroundResource(R.drawable.stun1)
                 loopPlayer = MediaPlayer.create(this@StunGunActivity, R.raw.stun1)
-                text1.setText("")
+                text1.text = ""
                 text2.setText(R.string.vipertek)
                 text3.setText(R.string.tactical)
                 text4.setText(R.string.taser)
@@ -163,13 +198,13 @@ class StunGunActivity : BaseClass() {
             } else {
                 Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-        })
-        card2.setOnClickListener(View.OnClickListener { v: View? ->
+        }
+        card2.setOnClickListener {
             if (!loopStatus) {
                 imageView!!.setBackgroundResource(R.drawable.stun2)
                 loopPlayer = MediaPlayer.create(this@StunGunActivity, R.raw.stun2)
                 text1.setText(R.string.stun_gun)
-                text2.setText("")
+                text2.text = ""
                 text3.setText(R.string.tactical)
                 text4.setText(R.string.taser)
                 text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
@@ -180,14 +215,14 @@ class StunGunActivity : BaseClass() {
             } else {
                 Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-        })
-        card3.setOnClickListener(View.OnClickListener { v: View? ->
+        }
+        card3.setOnClickListener {
             if (!loopStatus) {
                 imageView!!.setBackgroundResource(R.drawable.stun3)
                 loopPlayer = MediaPlayer.create(this@StunGunActivity, R.raw.stun3)
                 text1.setText(R.string.stun_gun)
                 text2.setText(R.string.vipertek)
-                text3.setText("")
+                text3.text = ""
                 text4.setText(R.string.taser)
                 text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
                 text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
@@ -197,15 +232,15 @@ class StunGunActivity : BaseClass() {
             } else {
                 Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-        })
-        card4.setOnClickListener(View.OnClickListener { v: View? ->
+        }
+        card4.setOnClickListener {
             if (!loopStatus) {
                 imageView!!.setBackgroundResource(R.drawable.stun4)
                 loopPlayer = MediaPlayer.create(this@StunGunActivity, R.raw.stun4)
                 text1.setText(R.string.stun_gun)
                 text2.setText(R.string.vipertek)
                 text3.setText(R.string.tactical)
-                text4.setText("")
+                text4.text = ""
                 text1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
                 text2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
                 text3.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
@@ -214,29 +249,27 @@ class StunGunActivity : BaseClass() {
             } else {
                 Toast.makeText(this, R.string.stop_loop_first, Toast.LENGTH_SHORT).show()
             }
-        })
+        }
 
         val low = findViewById<ImageView>(R.id.volumeLow)
-        low.setOnClickListener(View.OnClickListener { v: View? ->
+        low.setOnClickListener {
             val index = volumeSeekbar!!.progress
             volumeSeekbar!!.progress = index - 1
-        })
+        }
         val high = findViewById<ImageView>(R.id.volumeUp)
-        high.setOnClickListener(View.OnClickListener { v: View? ->
+        high.setOnClickListener {
             val index = volumeSeekbar!!.progress
             volumeSeekbar!!.progress = index + 1
-        })
+        }
         try {
             volumeSeekbar = findViewById<View?>(R.id.seekbar1) as SeekBar?
             audioManager = getSystemService(AUDIO_SERVICE) as AudioManager?
 
-            volumeSeekbar!!.setMax(
-                audioManager!!
-                    .getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-            )
+            volumeSeekbar!!.max = audioManager!!
+                .getStreamMaxVolume(AudioManager.STREAM_MUSIC)
             volumeSeekbar!!.progress = audioManager!!
                 .getStreamVolume(AudioManager.STREAM_MUSIC)
-            volumeSeekbar!!.setMax(20)
+            volumeSeekbar!!.max = 20
             volumeSeekbar!!.progress = 15
             val pro = volumeSeekbar!!.progress
 
@@ -261,9 +294,19 @@ class StunGunActivity : BaseClass() {
         }
     }
 
-    private fun loadBanner() {
-        if (!paymentSubscription.isPurchased && internetConnection(this)) {
-            BannerAd.load(frameLayout!!, getString(R.string.BannerAd), false)
+
+    private fun loadBannerAd() {
+        val adId = if (AdConstants.TEST_ADS) {
+            getString(R.string.BannerAd)
+        } else {
+            RemoteConfig.getString(RemoteConfig.STUNT_GUN_BANNER_AD_ID)
+        }
+        val makeCollapsible =
+            RemoteConfig.getBoolean(RemoteConfig.STUNT_GUN_BANNER_MAKE_COLLAPSIBLE)
+        val enable = RemoteConfig.getBoolean(RemoteConfig.ENABLE_STUNT_GUN_BANNER_AD)
+
+        if (paymentSubscription.isPurchased.not() && internetConnection(this) && enable) {
+            BannerAd.load(frameLayout!!, adId.trim(), makeCollapsible)
         } else {
             frameLayout!!.visibility = View.GONE
         }

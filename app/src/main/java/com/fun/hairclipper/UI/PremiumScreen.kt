@@ -2,20 +2,23 @@ package com.`fun`.hairclipper.UI
 
 import android.os.Bundle
 import com.android.billingclient.api.ProductDetails
+import com.`fun`.hairclipper.admobHelper.MyApplication
 import com.`fun`.hairclipper.databinding.ActivityPremiumBinding
-import com.`fun`.hairclipper.helpers.PaymentSubscription
+import com.`fun`.hairclipper.helpers.PaymentSubscriptionKotlin
 
-class PremiumScreen : BaseClass(), PaymentSubscription.ItemDetailsListener {
+class PremiumScreen : BaseClass(), PaymentSubscriptionKotlin.ItemDetailsListener {
     private val binding by lazy { ActivityPremiumBinding.inflate(layoutInflater) }
+    private lateinit var subscription: PaymentSubscriptionKotlin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        paymentSubscription.setItemDetailsListener(this)
-        paymentSubscription.productDetails?.let {
-            onItemDetails(paymentSubscription.productDetails)
+        subscription = (applicationContext as MyApplication).paymentSubscription
+        subscription.setItemDetailsListener(this)
+        subscription.productDetails?.let {
+            onItemDetails(subscription.productDetails!!)
         }
         binding.btnContinuePurchase.setOnClickListener {
-            paymentSubscription.purchaseNow(this@PremiumScreen)
+            subscription.purchaseNow(this@PremiumScreen)
         }
         binding.ivCross.setOnClickListener {
             finish()
@@ -27,7 +30,7 @@ class PremiumScreen : BaseClass(), PaymentSubscription.ItemDetailsListener {
 
     override fun onItemDetails(skuDetails: ProductDetails) {
         val oneTimePurchaseOfferDetails =
-            paymentSubscription.productDetails.oneTimePurchaseOfferDetails
+            subscription.productDetails?.oneTimePurchaseOfferDetails
         oneTimePurchaseOfferDetails?.formattedPrice?.also {
             binding.tvPrice.text = it
         }

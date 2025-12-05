@@ -6,7 +6,11 @@ import android.os.Vibrator
 import android.view.View
 import android.widget.CompoundButton
 import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.FullScreenAdListener
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityMachine1Binding
 
@@ -18,7 +22,7 @@ class Machine1 : BaseClass() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         loadBannerAD()
-        binding.homeBtn.setOnClickListener { finish() }
+        binding.homeBtn.setOnClickListener { handleBackPressed() }
         mediaPlayer = MediaPlayer.create(this@Machine1, R.raw.hair_clipper1)
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         binding.toggleButton1.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
@@ -26,29 +30,49 @@ class Machine1 : BaseClass() {
                 vibrator!!.vibrate(300000)
                 mediaPlayer!!.start()
             } else {
-                vibrator!!.cancel()
-                mediaPlayer!!.stop()
-                mediaPlayer!!.prepareAsync()
+                MyApplication.showInterstitialAdTrimmer(this, object : FullScreenAdListener() {
+                    override fun gotoNext() {
+                        super.gotoNext()
+                        vibrator!!.cancel()
+                        mediaPlayer!!.stop()
+                        mediaPlayer!!.prepareAsync()
+                    }
+                }, "stop_machine_1")
             }
         }
 
         mediaPlayer!!.setOnCompletionListener { _: MediaPlayer? ->
             vibrator!!.cancel()
-            binding.toggleButton1.setChecked(false)
+            binding.toggleButton1.isChecked = false
         }
     }
 
+
     private fun loadBannerAD() {
-        if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
-            BannerAd.load(binding.adaptive, getString(R.string.BannerAd), false)
+        val adId = if (AdConstants.TEST_ADS) {
+            getString(R.string.BannerAd)
+        } else {
+            RemoteConfig.getString(RemoteConfig.MACHINE1_BANNER_AD_ID)
+        }
+        val makeCollapsible = RemoteConfig.getBoolean(RemoteConfig.MACHINE1_BANNER_MAKE_COLLAPSIBLE)
+        val enable = RemoteConfig.getBoolean(RemoteConfig.ENABLE_MACHINE1_BANNER_AD)
+
+        if (paymentSubscription.isPurchased.not() && internetConnection(this) && enable) {
+            BannerAd.load(binding.adaptive, adId.trim(), makeCollapsible)
         } else {
             binding.adaptive.visibility = View.GONE
         }
     }
 
     override fun handleBackPressed() {
-        super.handleBackPressed()
-        vibrator!!.cancel()
-        mediaPlayer!!.stop()
+        MyApplication.showInterstitialAdTrimmer(this, object : FullScreenAdListener() {
+            override fun gotoNext() {
+                super.gotoNext()
+                vibrator!!.cancel()
+                mediaPlayer!!.stop()
+                finish()
+            }
+        }, "btn_back_m1")
+
     }
 }

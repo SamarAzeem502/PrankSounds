@@ -12,7 +12,11 @@ import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import android.widget.Toast
 import com.`fun`.hairclipper.R
+import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
+import com.`fun`.hairclipper.admobHelper.FullScreenAdListener
+import com.`fun`.hairclipper.admobHelper.MyApplication
+import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityHalloweenBinding
 
@@ -31,7 +35,7 @@ class HalloweenActivity : BaseClass() {
         volumeControlStream = AudioManager.STREAM_MUSIC
         loadBanner()
         initControls()
-        binding.homeBtn.setOnClickListener { finish() }
+        binding.homeBtn.setOnClickListener { handleBackPressed() }
         binding.lott.animate()
         val shake: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.shake)
 
@@ -58,15 +62,22 @@ class HalloweenActivity : BaseClass() {
                     binding.imagehiorn.startAnimation(shake)
                     binding.lott.playAnimation()
                 } else {
-                    binding.loopImage.visibility = View.GONE
-                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
-                    setText(R.string.start_loop)
-                    loopStatus = false
-                    player!!.stop()
-                    player!!.release()
-                    binding.imagehiorn.clearAnimation()
-                    binding.lott.pauseAnimation()
-                    binding.lott.visibility = View.GONE
+                    MyApplication.showInterstitialAdHalloween(this@HalloweenActivity,object :
+                        FullScreenAdListener(){
+                        override fun gotoNext() {
+                            super.gotoNext()
+                            binding.loopImage.visibility = View.GONE
+                            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_loop, 0, 0, 0)
+                            setText(R.string.start_loop)
+                            loopStatus = false
+                            player!!.stop()
+                            player!!.release()
+                            binding.imagehiorn.clearAnimation()
+                            binding.lott.pauseAnimation()
+                            binding.lott.visibility = View.GONE
+                        }
+                    },"btn_stop_loop")
+
                 }
             }
         }
@@ -107,10 +118,15 @@ class HalloweenActivity : BaseClass() {
     }
 
     override fun handleBackPressed() {
-        if (loopStatus) {
-            cleanUpMediaPlayer()
-        }
-        super.handleBackPressed()
+        MyApplication.showInterstitialAdHalloween(this,object : FullScreenAdListener(){
+            override fun gotoNext() {
+                super.gotoNext()
+                if (loopStatus) {
+                    cleanUpMediaPlayer()
+                }
+                finish()
+            }
+        },"btn_back_halloween")
     }
 
     private fun initControls() {
@@ -237,8 +253,16 @@ class HalloweenActivity : BaseClass() {
     }
 
     private fun loadBanner() {
-        if (!paymentSubscription.isPurchased && internetConnection(this)) {
-            BannerAd.load(binding.adaptiveHalloween, getString(R.string.BannerAd), false)
+        val adId = if (AdConstants.TEST_ADS) {
+            getString(R.string.BannerAd)
+        } else {
+            RemoteConfig.getString(RemoteConfig.HALLOWEEN_BANNER_AD_ID)
+        }
+        val makeCollapsible = RemoteConfig.getBoolean(RemoteConfig.HALLOWEEN_BANNER_MAKE_COLLAPSIBLE)
+        val enable = RemoteConfig.getBoolean(RemoteConfig.ENABLE_HALLOWEEN_BANNER_AD)
+
+        if (paymentSubscription.isPurchased.not() && internetConnection(this) && enable) {
+            BannerAd.load(binding.adaptiveHalloween, adId.trim(), makeCollapsible)
         } else {
             binding.adaptiveHalloween.visibility = View.GONE
         }

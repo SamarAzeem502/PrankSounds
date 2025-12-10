@@ -4,7 +4,7 @@ import android.os.CountDownTimer
 import com.google.android.gms.ads.nativead.NativeAd
 
 object AdConstants {
-    var TEST_ADS = true
+    var TEST_ADS = false
     var INTRO_NATIVE_AD: NativeAd? = null
     var SHOWING_INTER_AD = false
     var SHOWING_APP_OPEN_AD = false

@@ -4,9 +4,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Vibrator
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.ImageView
-import android.widget.ToggleButton
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.admobHelper.AdConstants
 import com.`fun`.hairclipper.admobHelper.BannerAd
@@ -15,7 +13,6 @@ import com.`fun`.hairclipper.admobHelper.MyApplication
 import com.`fun`.hairclipper.admobHelper.RemoteConfig
 import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityMachine5Binding
-import com.google.android.gms.ads.interstitial.InterstitialAd
 
 class Machine5 : BaseClass() {
     var vibrator: Vibrator? = null
@@ -32,17 +29,22 @@ class Machine5 : BaseClass() {
         view.setOnClickListener { handleBackPressed() }
         mediaPlayer = MediaPlayer.create(this@Machine5, R.raw.hair_clipper5)
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
-        binding.toggleButton1.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+        binding.toggleButton1.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                vibrator!!.vibrate(300000)
-                mediaPlayer!!.start()
+                vibrator?.vibrate(300000)
+                mediaPlayer?.apply {
+                    try {
+                        if (!isPlaying) start()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             } else {
                 MyApplication.showInterstitialAdTrimmer(this, object : FullScreenAdListener() {
                     override fun gotoNext() {
                         super.gotoNext()
-                        vibrator!!.cancel()
-                        mediaPlayer!!.stop()
-                        mediaPlayer!!.prepareAsync()
+                        vibrator?.cancel()
+                        stopMediaPlayer()
                     }
                 }, "stop_machine_5")
             }
@@ -53,12 +55,27 @@ class Machine5 : BaseClass() {
         }
     }
 
+    private fun stopMediaPlayer() {
+        try {
+            mediaPlayer?.let {
+                if (it.isPlaying) it.stop()
+                it.reset()
+                it.release()
+            }
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } finally {
+            mediaPlayer = null
+        }
+    }
+
+
     override fun handleBackPressed() {
         MyApplication.showInterstitialAdTrimmer(this, object : FullScreenAdListener() {
             override fun gotoNext() {
                 super.gotoNext()
-                vibrator!!.cancel()
-                mediaPlayer!!.stop()
+                vibrator?.cancel()
+                stopMediaPlayer()
                 finish()
             }
         }, "btn_back_m5")

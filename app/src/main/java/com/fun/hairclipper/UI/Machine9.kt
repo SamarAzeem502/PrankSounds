@@ -15,11 +15,12 @@ import com.`fun`.hairclipper.admobHelper.internetConnection
 import com.`fun`.hairclipper.databinding.ActivityMachine9Binding
 
 class Machine9 : BaseClass() {
-    var vibrator: Vibrator? = null
-    var mediaPlayer: MediaPlayer? = null
-    private val binding by lazy { ActivityMachine9Binding.inflate(layoutInflater) }
+    private var vibrator: Vibrator? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private lateinit var binding: ActivityMachine9Binding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMachine9Binding.inflate(layoutInflater)
         setContentView(binding.root)
         loadBannerAd()
         binding.homeBtn.setOnClickListener { handleBackPressed() }

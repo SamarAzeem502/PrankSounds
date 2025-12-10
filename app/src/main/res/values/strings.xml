@@ -2,22 +2,21 @@
     <string name="app_name">Prank Sounds</string>
     <string name="AppId" translatable="false">ca-app-pub-4665039869705085~3678890949</string>
 
-    <!--    Original Ids-->
-<!--    <string name="BannerAd">ca-app-pub-4665039869705085/2555043126</string>-->
-<!--    <string name="CollapsibleBannerAd">ca-app-pub-4665039869705085/8585354762</string>-->
-<!--    <string name="Interstitial">ca-app-pub-4665039869705085/9979240563</string>-->
-<!--    <string name="SplashInterstitial">ca-app-pub-4665039869705085/3292611585</string>-->
-<!--    <string name="AppOpen">ca-app-pub-4665039869705085/3185313104</string>-->
+    <!--Original Ids-->
+<!--    <string name="BannerAd" translatable="false">ca-app-pub-4665039869705085/2555043126</string>-->
+<!--    <string name="CollapsibleBannerAd" translatable="false">ca-app-pub-4665039869705085/8585354762</string>-->
+<!--    <string name="Interstitial" translatable="false">ca-app-pub-4665039869705085/9979240563</string>-->
+<!--    <string name="SplashInterstitial" translatable="false">ca-app-pub-4665039869705085/3292611585</string>-->
+<!--    <string name="AppOpen" translatable="false">ca-app-pub-4665039869705085/3185313104</string>-->
 <!--    <string name="native_ad" translatable="false">ca-app-pub-4665039869705085/8967228219</string>-->
-
-<!--    &lt;!&ndash;    &lt;!&ndash;    TestIds&ndash;&gt;&ndash;&gt;-->
+    <!--TestIds-->
     <string name="BannerAd" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="CollapsibleBannerAd" translatable="false">ca-app-pub-3940256099942544/2014213617</string>
     <string name="Interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
     <string name="SplashInterstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="native_ad" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
     <string name="app_open" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
     <string name="app_open_real" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
-    <string name="native_ad" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
     <string name="banner_test_ad_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="native_test_ad_id" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
 

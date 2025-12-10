@@ -2,7 +2,6 @@ package com.`fun`.hairclipper.admobHelper
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
@@ -13,6 +12,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.drawable.toDrawable
+import androidx.multidex.MultiDex
+import androidx.multidex.MultiDexApplication
 import com.`fun`.hairclipper.R
 import com.`fun`.hairclipper.admobHelper.AdConstants.appOpenToInterstitialCapComplete
 import com.`fun`.hairclipper.databinding.ProgressDailogBinding
@@ -24,12 +25,15 @@ import com.google.android.gms.ads.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 
-class MyApplication : Application() {
+class MyApplication : MultiDexApplication() {
     val paymentSubscription: PaymentSubscriptionKotlin by lazy { PaymentSubscriptionKotlin(this) }
 
     override fun onCreate() {
         super.onCreate()
-        MobileAds.initialize(this)
+        try {
+            MobileAds.initialize(this)
+        } catch (_: Exception) {
+        }
         AppCompatDelegate.setDefaultNightMode(AppPrefs.getAppTheme(this, "app_theme"))
         if (paymentSubscription.isPurchased.not() && internetConnection(this)) {
             AppOpenManager(this)
@@ -654,6 +658,7 @@ class MyApplication : Application() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleNow.wrapContext(base))
+        MultiDex.install(base)
     }
 }
 

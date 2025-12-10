@@ -153,12 +153,16 @@ class SplashScreen : BaseClass() {
             RemoteConfig.FULL_SCREEN_NATIVE_AD_ID
         )
     }
+    private fun getInterstitialAdStrings(): String {
+        return if (AdConstants.TEST_ADS) getString(R.string.Interstitial)
+        else "ca-app-pub-4665039869705085/3292611585"
+    }
 
     private fun loadSplashAd() {
         val adRequest = AdRequest.Builder().build()
         InterstitialAd.load(
             this,
-            getString(R.string.SplashInterstitial),
+            getInterstitialAdStrings().trim(),
             adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {

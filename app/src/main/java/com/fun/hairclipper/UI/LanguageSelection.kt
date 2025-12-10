@@ -68,9 +68,9 @@ class LanguageSelection : BaseClass() {
 
     private fun languageNativeAd() {
         val adId = if (AdConstants.TEST_ADS) {
-            RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_AD_ID)
-        } else {
             getString(R.string.native_ad)
+        } else {
+            RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_AD_ID)
         }
         val adType = RemoteConfig.getString(RemoteConfig.LANGUAGE_NATIVE_AD_TYPE)
         val adRound = RemoteConfig.getBoolean(RemoteConfig.LANGUAGE_NATIVE_BUTTON_CORNERS)

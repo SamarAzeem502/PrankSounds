@@ -16,7 +16,7 @@ android {
         targetSdk = 35
         versionCode 59
         versionName "2.3.8"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,6 +39,12 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 }
 // for groovy
@@ -81,5 +87,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-config'
 
     implementation 'com.github.bumptech.glide:glide:5.0.5'
+
+    implementation("androidx.multidex:multidex:2.0.1")
 
 }

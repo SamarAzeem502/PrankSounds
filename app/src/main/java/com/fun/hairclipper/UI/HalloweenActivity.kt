@@ -121,9 +121,7 @@ class HalloweenActivity : BaseClass() {
         MyApplication.showInterstitialAdHalloween(this,object : FullScreenAdListener(){
             override fun gotoNext() {
                 super.gotoNext()
-                if (loopStatus) {
-                    cleanUpMediaPlayer()
-                }
+                cleanUpMediaPlayer()
                 finish()
             }
         },"btn_back_halloween")
@@ -285,12 +283,22 @@ class HalloweenActivity : BaseClass() {
     }
 
     fun cleanUpMediaPlayer() {
-        if (player != null) {
-            if (player!!.isPlaying) {
-                player!!.stop()
+        try {
+            player?.let {
+                try {
+                    if (it.isPlaying) {
+                        it.stop()
+                    }
+                } catch (e: IllegalStateException) {
+                    // MediaPlayer was not in a valid state, ignore
+                }
+                it.release()
             }
-            player!!.release()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
             player = null
         }
     }
+
 }

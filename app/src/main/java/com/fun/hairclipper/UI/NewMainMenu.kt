@@ -142,9 +142,9 @@ class NewMainMenu : BaseClass() {
             }
         }
         val adId = if (AdConstants.TEST_ADS) {
-            RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_AD_ID)
-        } else {
             getString(R.string.native_ad)
+        } else {
+            RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_AD_ID)
         }
         val adType = RemoteConfig.getString(RemoteConfig.EXIT_NATIVE_AD_TYPE)
         val adRound = RemoteConfig.getBoolean(RemoteConfig.EXIT_NATIVE_BUTTON_ROUND)
@@ -172,9 +172,9 @@ class NewMainMenu : BaseClass() {
 
     private fun loadMainNativeAd() {
         val adId = if (AdConstants.TEST_ADS) {
-            RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_AD_ID)
-        } else {
             getString(R.string.native_ad)
+        } else {
+            RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_AD_ID)
         }
         val adType = RemoteConfig.getString(RemoteConfig.MAIN_NATIVE_AD_TYPE)
         val adRound = RemoteConfig.getBoolean(RemoteConfig.MAIN_NATIVE_BUTTON_CORNERS)

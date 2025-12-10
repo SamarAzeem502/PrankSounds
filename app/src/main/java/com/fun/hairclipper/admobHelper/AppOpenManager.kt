@@ -87,7 +87,7 @@ class AppOpenManager(private val myApplication: MyApplication) : ActivityLifecyc
             val s: String = if (AdConstants.TEST_ADS) {
                 myApplication.getString(R.string.app_open)
             } else {
-                myApplication.getString(R.string.app_open_real)
+                "ca-app-pub-4665039869705085/3185313104"
             }
             isAdLoading = true
             AppOpenAd.load(myApplication, s.trim(), request, loadCallback as AppOpenAdLoadCallback)
@@ -183,6 +183,7 @@ class AppOpenManager(private val myApplication: MyApplication) : ActivityLifecyc
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     override fun onActivityDestroyed(activity: Activity) {
         Log.d("test", "onActivityDestroyed: ${activity.localClassName} ")
+        MyApplication.hideProgress()
         currentActivity = null
     }
 
